@@ -1,0 +1,83 @@
+{
+    "name": "@propcheck/core",
+    "version": "0.9.0",
+    "description": "Core library of propcheck, a property based testing suite",
+    "license": "MIT",
+    "main": "index.js",
+    "types": "index.d.ts",
+    "files": [
+        "generators/*.js",
+        "generators/*.d.ts",
+        "Gen.d.ts",
+        "Gen.js",
+        "index.d.ts",
+        "index.js",
+        "prng.d.ts",
+        "prng.js",
+        "Range.d.ts",
+        "Range.js",
+        "runner.d.ts",
+        "runner.js",
+        "shrink.d.ts",
+        "shrink.js",
+        "Tree.d.ts",
+        "Tree.js"
+    ],
+    "keywords": [
+        "functional",
+        "propcheck",
+        "property-based testing",
+        "quickcheck",
+        "test",
+        "testing",
+        "typescript"
+    ],
+    "author": "Björn Aili <4073478+beark@users.noreply.github.com> (https://github.com/beark)",
+    "repository": "github:beark/propcheck",
+    "homepage": "https://github.com/beark/propcheck",
+    "bugs": "https://github.com/beark/propcheck/issues",
+    "sideEffects": false,
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "clean": "git clean -fx -- *.js *.d.ts *.d.ts.map *.log && rm -rf generators/ coverage/",
+        "lint": "eslint \"./src/*\"",
+        "test": "jest"
+    },
+    "jest": {
+        "preset": "ts-jest",
+        "coverageThreshold": {
+            "global": {
+                "branches": 100,
+                "functions": 100,
+                "lines": 100,
+                "statements": 100
+            }
+        },
+        "watchPathIgnorePatterns": [
+            "<rootDir>/node_modules/"
+        ],
+        "globals": {
+            "ts-jest": {
+                "packageJson": "package.json",
+                "tsConfig": "tsconfig.json"
+            }
+        },
+        "reporters": [
+            "jest-standard-reporter"
+        ]
+    },
+    "dependencies": {
+        "lazy-sequences": "^1.0.0",
+        "tslib": "^1.10.0"
+    },
+    "devDependencies": {
+        "@types/jest": "25.1.3",
+        "@typescript-eslint/eslint-plugin": "2.21.0",
+        "@typescript-eslint/parser": "2.21.0",
+        "eslint": "6.8.0",
+        "jest": "25.1.0",
+        "jest-standard-reporter": "1.0.4",
+        "ts-jest": "25.2.1",
+        "typescript": "3.8.3"
+    }
+}

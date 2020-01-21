@@ -1,0 +1,3 @@
+{
+  "typescript.tsdk": "common/temp/node_modules/typescript/lib"
+}

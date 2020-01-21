@@ -1,0 +1,77 @@
+{
+    "name": "@propcheck/jest",
+    "version": "0.9.0",
+    "description": "Jest integration/plugin for propcheck",
+    "license": "MIT",
+    "main": "index.js",
+    "types": "index.d.ts",
+    "files": [
+        "index.js",
+        "index.d.ts"
+    ],
+    "keywords": [
+        "functional",
+        "jest",
+        "propcheck",
+        "property-based testing",
+        "quickcheck",
+        "test",
+        "testing",
+        "typescript"
+    ],
+    "author": "Björn Aili <4073478+beark@users.noreply.github.com> (https://github.com/beark)",
+    "repository": "github:beark/propcheck",
+    "homepage": "https://github.com/beark/propcheck",
+    "bugs": "https://github.com/beark/propcheck/issues",
+    "sideEffects": [
+        "index.js"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "clean": "git clean -fx -- *.js *.d.ts *.d.ts.map *.log && rm -rf coverage/",
+        "lint": "eslint \"./src/*\"",
+        "test": "jest"
+    },
+    "jest": {
+        "preset": "ts-jest",
+        "coverageThreshold": {
+            "global": {
+                "branches": 100,
+                "functions": 100,
+                "lines": 100,
+                "statements": 100
+            }
+        },
+        "watchPathIgnorePatterns": [
+            "<rootDir>/node_modules/"
+        ],
+        "globals": {
+            "ts-jest": {
+                "packageJson": "package.json",
+                "tsConfig": "tsconfig.json"
+            }
+        },
+        "reporters": [
+            "jest-standard-reporter"
+        ]
+    },
+    "peerDependencies": {
+        "jest": ">= 24.1.0 < 26",
+        "@types/jest": ">= 24.0.20 < 26"
+    },
+    "dependencies": {
+        "@propcheck/core": "^0.9.0",
+        "tslib": "^1.10.0"
+    },
+    "devDependencies": {
+        "@types/jest": "25.1.3",
+        "@types/node": "12.12.2",
+        "@typescript-eslint/eslint-plugin": "2.21.0",
+        "@typescript-eslint/parser": "2.21.0",
+        "eslint": "6.8.0",
+        "jest": "25.1.0",
+        "jest-standard-reporter": "1.0.4",
+        "ts-jest": "25.2.1",
+        "typescript": "3.8.3"
+    }
+}

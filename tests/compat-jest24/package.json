@@ -1,0 +1,39 @@
+{
+  "name": "compat-jest24",
+  "version": "0.9.0",
+  "description": "Package to test @propcheck/jest against jest 24.x",
+  "license": "MIT",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo 'nothing to do'",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "watchPathIgnorePatterns": [
+      "<rootDir>/node_modules/"
+    ],
+    "globals": {
+      "ts-jest": {
+        "packageJson": "package.json",
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "setupFilesAfterEnv": [
+      "@propcheck/jest"
+    ],
+    "reporters": [
+      "jest-standard-reporter"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@propcheck/core": "0.9.0",
+    "@propcheck/jest": "0.9.0",
+    "@types/jest": "24.0.20",
+    "jest": "24.1.0",
+    "ts-jest": "24.1.0"
+  }
+}
