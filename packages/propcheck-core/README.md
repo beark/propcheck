@@ -1,6 +1,6 @@
 # `@propcheck/core`
 
-As the name implies, this is the core library of [Propcheck](https://github.com/beark/propcheck), a suite of libraries and plugins for writing and running property based tests in TypeScript and JavaScript. This core should provide the primitives needed for anyone to either write their own property based testing framework, or to write something usable in combination with an existing testing framework. For an example of the latter, see [@propcheck/jest](https://github.com/beark/propcheck/tree/master/packages/propcheck-jet), a package that lets you run property based tests in Jest.
+As the name implies, this is the core library of [Propcheck](https://github.com/beark/propcheck), a suite of libraries and plugins for writing and running property based tests in TypeScript and JavaScript. This core should provide the primitives needed for anyone to either write their own property based testing framework, or to write something usable in combination with an existing testing framework. For an example of the latter, see [@propcheck/jest](https://github.com/beark/propcheck/tree/master/packages/propcheck-jest), a package that lets you run property based tests in Jest.
 
 In any case, `@propcheck/core` contains a set of modules to do with property based testing:
 - `Prng` -- a generator of pseudo randomness, the ultimate source of all generated values. Almost all generators in `Generator` are built on this module.
