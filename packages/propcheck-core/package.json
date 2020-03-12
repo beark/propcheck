@@ -37,6 +37,9 @@
     "homepage": "https://github.com/beark/propcheck",
     "bugs": "https://github.com/beark/propcheck/issues",
     "sideEffects": false,
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
         "clean": "git clean -fx -- *.js *.d.ts *.d.ts.map *.log && rm -rf generators/ coverage/",
