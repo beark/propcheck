@@ -1,7 +1,5 @@
 import { Gen } from "@propcheck/core";
 
-declare const console: any;
-
 describe("Jest 24", () => {
   describe("forall", () => {
     it("should pass as expected", () => {
