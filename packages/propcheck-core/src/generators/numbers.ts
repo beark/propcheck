@@ -14,6 +14,12 @@ import { towardsIntegral, towardsNum } from "../shrink"
  * @returns {Gen<number>}
  */
 export function integral(r: Range): Gen<number> {
+    if (!Number.isInteger(r.origin)) {
+        throw new RangeError(
+            "@propcheck/core/generators: integral requires origin to be an integer",
+        )
+    }
+
     return integral_(r).shrinkRecursively(x => towardsIntegral(r.origin, x))
 }
 
@@ -29,6 +35,18 @@ export function integral(r: Range): Gen<number> {
  */
 export function integral_(r: Range): Gen<number> {
     const { minBound, maxBound } = r
+
+    if (!Number.isInteger(minBound)) {
+        throw new RangeError(
+            "@propcheck/core/generators: integral_ requires minBound to be an integer",
+        )
+    }
+
+    if (!Number.isInteger(maxBound)) {
+        throw new RangeError(
+            "@propcheck/core/generators: integral_ requires maxBound to be an integer",
+        )
+    }
 
     return Gen.fromFn((_, st) => nextInt(st, { minBound, maxBound }))
 }

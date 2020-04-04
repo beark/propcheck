@@ -276,25 +276,25 @@ function makeTestConfig<TGens extends Gen<unknown>[]>(
 ): Runner<Given<TGens>> {
     if (!(opts.iterations > 0 && Number.isInteger(opts.iterations))) {
         throw new RangeError(
-            "@propcheck/core/Runner: iterations must be an integer > 0",
+            "@propcheck/core/runner: iterations must be an integer > 0",
         )
     }
 
     if (!(opts.startIteration >= 1 && Number.isInteger(opts.startIteration))) {
         throw new RangeError(
-            "@propcheck/core/Runner: startIteration must be an integer >= 1",
+            "@propcheck/core/runner: startIteration must be an integer >= 1",
         )
     }
 
     if (!(opts.startSize >= 0 && Number.isInteger(opts.startSize))) {
         throw new RangeError(
-            "@propcheck/core/Runner: startSize must be an integer >= 0",
+            "@propcheck/core/runner: startSize must be an integer >= 0",
         )
     }
 
     if (!(opts.maxSize >= opts.startSize && Number.isInteger(opts.maxSize))) {
         throw new RangeError(
-            "@propcheck/core/Runner: maxSize must be an integer >= startSize",
+            "@propcheck/core/runner: maxSize must be an integer >= startSize",
         )
     }
 
@@ -392,7 +392,7 @@ function check<TArgs extends unknown[]>(
 }
 
 type SingleShrinkResult<TArgs> = {
-    shrinks: number;
+    shrinks: number
     smallestFailingArgs?: TArgs
 }
 

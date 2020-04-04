@@ -1,11 +1,13 @@
 import { Range } from "../Range"
-import { frequency_, oneOf_ } from "./choice"
+import { frequency, frequency_, oneOf_ } from "./choice"
 import { integral_, nat } from "./numbers"
 
 import type { Gen } from "../Gen"
 
 /**
  * Generate a single printable ASCII character (excludes code points 0-31).
+ *
+ * Characters are picked with a uniform distribution.
  *
  * - Size invariant.
  * - No shrink tree.
@@ -17,6 +19,8 @@ export const ascii: Gen<string> = integral_(new Range(32, 127, 32)).map(
 /**
  * Generate a single ASCII character from the full set, including non-printable
  * characters.
+ *
+ * Characters are picked with a uniform distribution.
  *
  * - Size invariant.
  * - No shrink tree.
@@ -38,6 +42,8 @@ export const latin1: Gen<string> = integral_(new Range(32, 255, 0)).map(
 /**
  * Generate a single lower case alphabetic character.
  *
+ * Characters are picked with a uniform distribution.
+ *
  * - Size invariant.
  * - No shrink tree.
  */
@@ -47,6 +53,8 @@ export const lower: Gen<string> = integral_(new Range(97, 122, 97)).map(
 
 /**
  * Generate a single upper case alphabetic character.
+ *
+ * Characters are picked with a uniform distribution.
  *
  * - Size invariant.
  * - No shrink tree.
@@ -58,6 +66,8 @@ export const upper: Gen<string> = integral_(new Range(65, 90, 65)).map(
 /**
  * Generate a single numeric digit/character.
  *
+ * Characters are picked with a uniform distribution.
+ *
  * - Size invariant.
  * - No shrink tree.
  */
@@ -68,6 +78,8 @@ export const digit: Gen<string> = integral_(new Range(48, 57, 48)).map(
 /**
  * Generate a single alphabetic character.
  *
+ * Characters are picked with a uniform distribution.
+ *
  * - Size invariant.
  * - No shrink tree.
  */
@@ -75,6 +87,8 @@ export const alpha: Gen<string> = oneOf_(lower, upper)
 
 /**
  * Generate a single alpha-numeric character.
+ *
+ * Characters are picked with a uniform distribution.
  *
  * - Size invariant.
  * - No shrink tree.
@@ -93,7 +107,8 @@ export const alphaNum: Gen<string> = frequency_(
  * - A non-character code
  * - Larger than 0xefffd
  *
- * The character may or may not actually be printable.
+ * Characters are picked with a uniform distribution and may or may not actually
+ * be printable.
  *
  * - Size invariant
  * - No shrink tree.
@@ -112,10 +127,39 @@ export const unicode: Gen<string> = frequency_(
     .map(String.fromCodePoint)
 
 /**
+ * Generates a single unicode character that is _not_ any of the following:
+ * - ASCII control character (0x0-0x1F)
+ * - A surrogate
+ * - In a private use area
+ * - A non-character code
+ * - Larger than 0xefffd
+ *
+ * Characters are picked from the ASCII set approximately 3/4th of the time, and
+ * from the rest of the unicode set the remaining time. Generated characters
+ * may or may not be printable.
+ *
+ * - Size invariant
+ * - Shrinks towards the ASCII set
+ */
+export const asciiBiasedUnicode: Gen<string> = frequency(
+    {
+        weight: 3,
+        gen: ascii,
+    },
+    {
+        weight: 1,
+        gen: integral_(new Range(0xfdf0, 0xefffd, 0))
+            .suchThat(c => nonCharacters.indexOf(c) === -1)
+            .map(String.fromCharCode),
+    },
+)
+
+/**
  * Generate a string from a character generator.
  *
  * - Length of the string grows linearly with size.
- * - Shrinks towards a zero length string.
+ * - Shrinks towards a zero length string. Shrinks from the `char` generator are
+ *   not propagated.
  *
  * @nosideeffects
  * @param {Gen<string>} char A generator for a single character.

@@ -5,7 +5,8 @@ import type { Gen, GeneratedType } from "../Gen"
 import type { TupleToUnion } from "../type-utils"
 
 /**
- * Generator that picks one of the elements in a given list.
+ * Generator that picks one of the elements in a given list with uniform
+ * distribution.
  *
  * - Size invariant.
  * - No shrink tree.
@@ -18,7 +19,7 @@ import type { TupleToUnion } from "../type-utils"
 export function elementOf_<T>(...options: T[]): Gen<T> {
     if (options.length === 0) {
         throw new RangeError(
-            "@propcheck/core/Choice: elementOf needs at least one element to pick from",
+            "@propcheck/core/generators: elementOf needs at least one element to pick from",
         )
     }
 
@@ -26,7 +27,8 @@ export function elementOf_<T>(...options: T[]): Gen<T> {
 }
 
 /**
- * Generator that picks one of the elements in a given list.
+ * Generator that picks one of the elements in a given list with uniform
+ * distribution.
  *
  * - Size invariant.
  * - Shrinks towards the first element in the array.
@@ -39,14 +41,14 @@ export function elementOf_<T>(...options: T[]): Gen<T> {
 export function elementOf<T>(...options: T[]): Gen<T> {
     if (options.length === 0) {
         throw new RangeError(
-            "@propcheck/core/Choice: elementOf needs at least one element to pick from",
+            "@propcheck/core/generators: elementOf needs at least one element to pick from",
         )
     }
 
     return integral(new Range(0, options.length - 1, 0)).map(i => options[i])
 }
 
-type UnionOfGeneratedTypes<T extends Gen<any>[]> = TupleToUnion<
+type UnionOfGeneratedTypes<T extends Gen<unknown>[]> = TupleToUnion<
     { [K in keyof T]: GeneratedType<T[K]> }
 >
 
@@ -64,12 +66,13 @@ type UnionOfGeneratedTypes<T extends Gen<any>[]> = TupleToUnion<
  * @returns {Gen<T>}
  * @template T
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function oneOf_<T extends Gen<any>[]>(
     ...gens: T
 ): Gen<UnionOfGeneratedTypes<T>> {
     if (gens.length === 0) {
         throw new RangeError(
-            "@propcheck/core/Choice: oneOf needs at least one generator to pick from",
+            "@propcheck/core/generators: oneOf needs at least one generator to pick from",
         )
     }
 
@@ -81,7 +84,8 @@ export function oneOf_<T extends Gen<any>[]>(
  * a value.
  *
  * - Picked generator determines growth properties.
- * - Shrinks towards the first generator.
+ * - Shrinks towards the first generator in addition to how the picked generator
+ *   shrinks.
  *
  * @nosideeffects
  * @param {Gen<T>[]} gens
@@ -90,12 +94,13 @@ export function oneOf_<T extends Gen<any>[]>(
  * @returns {Gen<T>}
  * @template T
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function oneOf<T extends Gen<any>[]>(
     ...gens: T
 ): Gen<UnionOfGeneratedTypes<T>> {
     if (gens.length === 0) {
         throw new RangeError(
-            "@propcheck/core/Choice: oneOf needs at least one generator to pick from",
+            "@propcheck/core/generators: oneOf needs at least one generator to pick from",
         )
     }
 
@@ -136,11 +141,20 @@ export type WeightedGen<T> = {
 export function frequency_<T>(...gens: WeightedGen<T>[]): Gen<T> {
     if (gens.length === 0) {
         throw new RangeError(
-            "@propcheck/core/Choice: frequency needs at least one generator to pick from",
+            "@propcheck/core/generators: frequency_ needs at least one generator to pick from",
         )
     }
 
-    const total = gens.reduce((a, e) => a + e.weight, 0)
+    const total = gens.reduce((a, e) => {
+        if (!Number.isInteger(e.weight) || e.weight < 0) {
+            throw new RangeError(
+                "@propcheck/core/generators: frequency_ requires all weights to be positive integers",
+            )
+        }
+
+        return a + e.weight
+    }, 0)
+
     return integral_(new Range(1, total, 1)).andThen(n => pick(n, gens))
 }
 
@@ -161,11 +175,19 @@ export function frequency_<T>(...gens: WeightedGen<T>[]): Gen<T> {
 export function frequency<T>(...gens: WeightedGen<T>[]): Gen<T> {
     if (gens.length === 0) {
         throw new RangeError(
-            "@propcheck/core/Choice: frequency needs at least one generator to pick from",
+            "@propcheck/core/generators: frequency needs at least one generator to pick from",
         )
     }
 
-    const total = gens.reduce((a, e) => a + e.weight, 0)
+    const total = gens.reduce((a, e) => {
+        if (!Number.isInteger(e.weight) || e.weight < 0) {
+            throw new RangeError(
+                "@propcheck/core/generators: frequency requires all weights to be positive integers",
+            )
+        }
+        return a + e.weight
+    }, 0)
+
     return integral(new Range(1, total, 1)).andThen(n => pick(n, gens))
 }
 

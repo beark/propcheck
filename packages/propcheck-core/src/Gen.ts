@@ -149,7 +149,7 @@ export class Gen<T> {
      * Seed state is iterated before the second generator is run.
      *
      * The shrink tree of the resulting generator is the combinatorial product
-     * of the shrink trees of `this` and the generator returned by `f`.
+     * of the shrink trees of left hand generator and the one returned by `f`.
      *
      * @nosideeffects
      * @param {(x: T) => Gen<U>} f
@@ -170,7 +170,7 @@ export class Gen<T> {
      * produced value of that.
      *
      * The resulting generator has the same size and shrink properties as
-     * `this`.
+     * the left hand operand -- except, of course, that `f` is applied.
      *
      * @nosideffects
      * @param {(x: T) => U} f Function to map.
@@ -192,7 +192,7 @@ export class Gen<T> {
      * ```
      *
      * Though, generally, there is both a shrinking and a non-shrinking version
-     * of all generators provided by `propcheck-core`.
+     * of all generators provided by `@propcheck/core`.
      *
      * @nosideeffects
      * @returns {Gen<T>}
@@ -239,14 +239,9 @@ export class Gen<T> {
      * @returns {Gen<T>}
      */
     resize(sz: number): Gen<T> {
-        if (
-            sz < 0 ||
-            !Number.isInteger(sz) ||
-            !Number.isFinite(sz) ||
-            isNaN(sz)
-        ) {
+        if (!Number.isInteger(sz) || sz < 0) {
             throw new RangeError(
-                "@propcheck/core/Gen: Can only resize with a non-negative integer",
+                "@propcheck/core/Gen: resize requires a non-negative integer sz",
             )
         }
 
