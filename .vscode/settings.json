@@ -1,3 +1,4 @@
 {
-  "typescript.tsdk": "common/temp/node_modules/typescript/lib"
+  "eslint.workingDirectories": [{"mode":"auto"}],
+  "typescript.tsdk": "common/temp/node_modules/typescript/lib",
 }
