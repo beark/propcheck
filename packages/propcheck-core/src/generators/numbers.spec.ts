@@ -36,6 +36,15 @@ describe("Generators/Numbers", () => {
 
             expect.assertions(seeds.length * 2 + 5)
         })
+
+        it("should throw when given an invalid range", () => {
+            expect(() => G.integral_(new Range(0.5, 1, 0))).toThrowError(
+                /minBound to be an integer/,
+            )
+            expect(() => G.integral_(new Range(-1, 1.5, 0))).toThrowError(
+                /maxBound to be an integer/,
+            )
+        })
     })
 
     describe("integral", () => {
@@ -82,6 +91,18 @@ describe("Generators/Numbers", () => {
             expect(t0.children.all(t => t.value < t0.value)).toBe(true)
             expect(t1.children.all(t => t.value < t1.value)).toBe(true)
             expect(t2.children.all(t => t.value < t2.value)).toBe(true)
+        })
+
+        it("should throw when given an invalid range", () => {
+            expect(() => G.integral(new Range(0.5, 1, 0))).toThrowError(
+                /minBound to be an integer/,
+            )
+            expect(() => G.integral(new Range(-1, 1.5, 0))).toThrowError(
+                /maxBound to be an integer/,
+            )
+            expect(() => G.integral(new Range(-1, 2, 0.5))).toThrowError(
+                /origin to be an integer/,
+            )
         })
     })
 

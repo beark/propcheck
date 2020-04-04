@@ -181,6 +181,18 @@ describe("Generators/Choice", () => {
             expect(() => G.frequency_()).toThrow(RangeError)
         })
 
+        it("should throw if a non-integral weight is given", () => {
+            expect(() =>
+                G.frequency_({ weight: 0.5, gen: Gen.const(0) }),
+            ).toThrow(RangeError)
+        })
+
+        it("should throw if a negative weight is given", () => {
+            expect(() =>
+                G.frequency_({ weight: -1, gen: Gen.const(0) }),
+            ).toThrow(RangeError)
+        })
+
         it("should always pick the first generator in a list of one", () => {
             const g = G.frequency_({ weight: 1, gen: Gen.const(3) })
 
@@ -242,6 +254,18 @@ describe("Generators/Choice", () => {
     describe("frequency", () => {
         it("should throw if given no generators to pick from", () => {
             expect(() => G.frequency()).toThrow(RangeError)
+        })
+
+        it("should throw if a non-integral weight is given", () => {
+            expect(() =>
+                G.frequency({ weight: 0.5, gen: Gen.const(0) }),
+            ).toThrow(RangeError)
+        })
+
+        it("should throw if a negative weight is given", () => {
+            expect(() =>
+                G.frequency({ weight: -1, gen: Gen.const(0) }),
+            ).toThrow(RangeError)
         })
 
         it("should always pick the first generator in a list of one", () => {

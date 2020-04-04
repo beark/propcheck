@@ -27,6 +27,21 @@ describe("Generators/Arrays", () => {
             expect(r2.length).toBeGreaterThan(2)
             expect(r2.length).toBeLessThan(8)
         })
+
+        it("should throw when given an invalid range", () => {
+            expect(() => G.array_(G.nat, new Range(0.5, 2, 0))).toThrowError(
+                /integral minBound/,
+            )
+            expect(() => G.array_(G.nat, new Range(-1, 2, 0))).toThrowError(
+                /integral minBound/,
+            )
+            expect(() => G.array_(G.nat, new Range(0, 2.5, 0))).toThrowError(
+                /integral maxBound/,
+            )
+            expect(() => G.array_(G.nat, new Range(2, 2, 0))).toThrowError(
+                /integral maxBound/,
+            )
+        })
     })
 
     describe("array", () => {
@@ -51,6 +66,24 @@ describe("Generators/Arrays", () => {
             expect(r1.length).toBeLessThan(8)
             expect(r2.length).toBeGreaterThan(2)
             expect(r2.length).toBeLessThan(8)
+        })
+
+        it("should throw when given an invalid range", () => {
+            expect(() => G.array(G.nat, new Range(0.5, 2, 0))).toThrowError(
+                /integral minBound/,
+            )
+            expect(() => G.array(G.nat, new Range(-1, 2, 0))).toThrowError(
+                /integral minBound/,
+            )
+            expect(() => G.array(G.nat, new Range(0, 2.5, 0))).toThrowError(
+                /integral maxBound/,
+            )
+            expect(() => G.array(G.nat, new Range(2, 2, 0))).toThrowError(
+                /integral maxBound/,
+            )
+            expect(() => G.array(G.nat, new Range(2, 5, 0.5))).toThrowError(
+                /integral origin/,
+            )
         })
 
         it("should generate sensible shrink trees", () => {
