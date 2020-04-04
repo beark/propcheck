@@ -28,6 +28,7 @@ export type ObjectGenerator<T> = { [K in keyof T]: Gen<T[K]> }
  */
 export function obj_<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
     if (Object.keys(gen).length === 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return Gen.const<{}>({}) as any
     }
 
@@ -41,7 +42,8 @@ export function obj_<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
                       .map(p => Object.assign({ ...o }, p))
                       .pruneShrinkTree(),
               )
-            : (thisGen.pruneShrinkTree() as any)
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (thisGen.pruneShrinkTree() as any)
     }
 
     return resultGen!
@@ -66,6 +68,7 @@ export function obj_<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
  */
 export function obj<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
     if (Object.keys(gen).length === 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return Gen.const<{}>({}) as any
     }
 
@@ -77,7 +80,8 @@ export function obj<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
             ? resultGen.andThen(o =>
                   thisGen.map(p => Object.assign({ ...o }, p)),
               )
-            : (thisGen as any)
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (thisGen as any)
     }
 
     return resultGen!

@@ -1,4 +1,4 @@
-import type { Gen } from "../Gen"
+import type Gen from "../Gen"
 
 /**
  * Generator of arbitrary functions.
@@ -35,7 +35,7 @@ import type { Gen } from "../Gen"
 export const fn = <TReturn>(
     retGen: Gen<TReturn>,
     domainSize: number = 50,
-): Gen<(...args: any[]) => TReturn> => {
+): Gen<(...args: unknown[]) => TReturn> => {
     const m = new Map<string, TReturn>()
     let i = 0
     return retGen.repeat(domainSize).map(rets => (...args) => {

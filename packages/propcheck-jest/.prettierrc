@@ -4,6 +4,7 @@
     "tabWidth": 4,
     "trailingComma": "all",
     "useTabs": false,
+    "arrowParens": "avoid",
     "overrides": [
         {
             "files": ".prettierrc",
