@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@propcheck/core",
+      "comment": "Improved input validation and added asciiBiasedUnicode generator.",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@propcheck/core",
+  "email": "bjorn.aili@gmail.com"
+}
