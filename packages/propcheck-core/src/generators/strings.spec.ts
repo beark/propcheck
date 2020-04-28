@@ -87,15 +87,15 @@ describe("Generators/Strings", () => {
     })
 
     describe("asciiBiasedUnicode", () => {
-        it("should generate characters of eah set with the expected frequency", () => {
+        it("should generate characters of each set with the expected frequency", () => {
             const csG = G.asciiBiasedUnicode.repeat(10000)
             const cs = csG.run(0, s0, 0).value
 
             const ascii = cs.filter(c => c.charCodeAt(0) <= 127)
             const uc = cs.filter(c => c.charCodeAt(0) > 127)
 
-            expect(ascii.length / 10000).toBeGreaterThanOrEqual(0.72)
-            expect(uc.length / 10000).toBeGreaterThanOrEqual(0.22)
+            expect(ascii.length / 10000).toBeGreaterThanOrEqual(0.73)
+            expect(uc.length / 10000).toBeGreaterThanOrEqual(0.23)
             expect(ascii.length + uc.length).toBe(10000)
         })
     })
