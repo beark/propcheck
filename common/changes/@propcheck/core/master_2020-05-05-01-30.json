@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@propcheck/core",
-      "comment": "Improved input validation and added `asciiBiasedUnicode` generator.",
+      "comment": "Added `propertyNameOf` generator.",
       "type": "minor"
     }
   ],

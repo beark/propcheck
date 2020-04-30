@@ -1,4 +1,5 @@
 import { Gen } from "../Gen"
+import { elementOf_ } from "./choice"
 
 /**
  * Object generator type.
@@ -85,4 +86,34 @@ export function obj<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
     }
 
     return resultGen!
+}
+
+/**
+ * Given an object, yields a generator of that object's own properties.
+ *
+ * Includes both string and symbol properties.
+ *
+ * Note that due to quirks of the TS type system, this has to return a
+ * `string | symbol` generator, not a `keyof` since that would be an absolute
+ * lie for many types. For example, `keyof number[]` includes a lot of methods
+ * like `pop`, `push`, `concat`, `indexOf`, ..., while none of `Object.keys`,
+ * `Object.getOwnPropertyNames`, etc include those members.
+ *
+ * - Size invariant.
+ * - No shrink tree.
+ *
+ * @nosideeffects
+ * @param {unknown} o Object the keys of which will be generated.
+ * @returns {Gen<string | symbol>}
+ * @example
+ * // arrNames will generate one of "0", "1", "2", "length"
+ * const arrNames = propertyNameOf(["a", "b", "c"]);
+ *
+ * // In effect, equivalent of Gen.const("foo")
+ * const objNames = propertyNameOf({ foo: null });
+ */
+export function propertyNameOf(o: unknown): Gen<string | symbol> {
+    const propKeys: (string | symbol)[] = Object.getOwnPropertyNames(o)
+
+    return elementOf_(...propKeys.concat(Object.getOwnPropertySymbols(o)))
 }

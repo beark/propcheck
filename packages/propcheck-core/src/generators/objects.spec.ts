@@ -77,8 +77,8 @@ describe("generators/objects", () => {
             })
 
             const r0 = g.run(1000, s0, 0)
-            const r1 = g.run(1000, s0, 0)
-            const r2 = g.run(1000, s0, 0)
+            const r1 = g.run(1000, s1, 0)
+            const r2 = g.run(1000, s2, 0)
 
             expect([...r0.children]).toHaveLength(0)
             expect([...r1.children]).toHaveLength(0)
@@ -159,12 +159,51 @@ describe("generators/objects", () => {
             })
 
             const r0 = g.run(1000, s0, 0)
-            const r1 = g.run(1000, s0, 0)
-            const r2 = g.run(1000, s0, 0)
+            const r1 = g.run(1000, s1, 0)
+            const r2 = g.run(1000, s2, 0)
 
             expect([...r0.children].length).toBeGreaterThan(0)
             expect([...r1.children].length).toBeGreaterThan(0)
             expect([...r2.children].length).toBeGreaterThan(0)
+        })
+    })
+
+    describe("propertyNameOf", () => {
+        it("should correctly generate array keys", () => {
+            const g = G.propertyNameOf([1, 2, 3]).repeat(100)
+
+            const r0 = g.run(0, s0, 0).value
+            const r1 = g.run(0, s1, 0).value
+            const r2 = g.run(0, s2, 0).value
+
+            expect(r0).toMatchObject(
+                expect.arrayContaining(["0", "1", "2", "length"]),
+            )
+            expect(r1).toMatchObject(
+                expect.arrayContaining(["0", "1", "2", "length"]),
+            )
+            expect(r2).toMatchObject(
+                expect.arrayContaining(["0", "1", "2", "length"]),
+            )
+        })
+
+        it("should only generate strings or symbols present in input", () => {
+            const g = G.propertyNameOf({
+                foo: undefined,
+                bar: undefined,
+            }).repeat(100)
+
+            const r0 = g.run(0, s0, 0).value
+            const r1 = g.run(0, s1, 0).value
+            const r2 = g.run(0, s2, 0).value
+
+            expect(r0.every(k => k === "foo" || k === "bar"))
+            expect(r1.every(k => k === "foo" || k === "bar"))
+            expect(r2.every(k => k === "foo" || k === "bar"))
+        })
+
+        it("should throw if input has no properties", () => {
+            expect(() => G.propertyNameOf({})).toThrow()
         })
     })
 })
