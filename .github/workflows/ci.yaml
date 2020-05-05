@@ -21,14 +21,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Use rushjs
-        run: npm i -g @microsoft/rush
 
       - name: Install
-        run: rush update
+        run: node common/scripts/install-run-rush install
 
       - name: Build and test
         run: |
-          rush build
-          rush lint
-          rush test --coverage
+          node common/scripts/install-run-rush build
+          node common/scripts/install-run-rush lint
+          node common/scripts/install-run-rush test --coverage
