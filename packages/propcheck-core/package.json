@@ -23,6 +23,9 @@
         "Tree.d.ts",
         "Tree.js"
     ],
+    "engines": {
+        "node": ">=12.7.0 <17"
+    },
     "keywords": [
         "functional",
         "propcheck",

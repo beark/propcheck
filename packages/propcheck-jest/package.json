@@ -9,6 +9,9 @@
         "index.js",
         "index.d.ts"
     ],
+    "engines": {
+        "node": ">=12.7.0 <17"
+    },
     "keywords": [
         "functional",
         "jest",
