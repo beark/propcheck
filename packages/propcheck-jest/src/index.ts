@@ -21,6 +21,7 @@ type ForallWithOptions<R, T> = T extends (...args: infer TParams) => unknown
 
 declare global {
     namespace jest {
+        // eslint-disable-next-line @typescript-eslint/ban-types
         interface Matchers<R, T = {}> {
             /**
              * Do a full property check run on the given property with default
@@ -207,7 +208,8 @@ function ss(word: string, count: number): string {
 function getEnvSeed(): string | SeedState | undefined {
     const envSeed = process.env.PROPCHECK_SEED
     if (envSeed) {
-        const regex = /{\s*([-]?[a-fA-F0-9]+)\s*,\s*([-]?[a-fA-F0-9]+)\s*,\s*([-]?[a-fA-F0-9]+)\s*,\s*([-]?[a-fA-F0-9]+)\s*}/
+        const regex =
+            /{\s*([-]?[a-fA-F0-9]+)\s*,\s*([-]?[a-fA-F0-9]+)\s*,\s*([-]?[a-fA-F0-9]+)\s*,\s*([-]?[a-fA-F0-9]+)\s*}/
         const match = envSeed.match(regex)
 
         if (match) {

@@ -1,0 +1,37 @@
+{
+  "name": "compat-jest27",
+  "version": "0.9.0",
+  "description": "Package to test @propcheck/jest against jest 27.x",
+  "license": "MIT",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo 'nothing to do'",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "watchPathIgnorePatterns": [
+      "<rootDir>/node_modules/"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.json"
+      }
+    },
+    "setupFilesAfterEnv": [
+      "@propcheck/jest"
+    ],
+    "reporters": [
+      "jest-standard-reporter"
+    ]
+  },
+  "devDependencies": {
+    "@propcheck/core": "0.9.0",
+    "@propcheck/jest": "0.9.0",
+    "@types/jest": "26.0.14",
+    "jest": "27.0.6",
+    "ts-jest": "27.0.4"
+  }
+}

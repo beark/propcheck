@@ -27,10 +27,11 @@ export type ObjectGenerator<T> = { [K in keyof T]: Gen<T[K]> }
  * // g: Gen<{ a: string, b: number }>
  * const g = obj_({ a: alphaChar, b: nat });
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function obj_<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
     if (Object.keys(gen).length === 0) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return Gen.const<{}>({}) as any
+        return Gen.const<Record<string, unknown>>({}) as any
     }
 
     let resultGen: Gen<T> | undefined
@@ -67,10 +68,11 @@ export function obj_<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
  * // g: Gen<{ a: string, b: number }>
  * const g = obj({ a: alphaChar, b: nat });
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function obj<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
     if (Object.keys(gen).length === 0) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return Gen.const<{}>({}) as any
+        return Gen.const<Record<string, unknown>>({}) as any
     }
 
     let resultGen: Gen<T> | undefined

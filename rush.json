@@ -318,6 +318,16 @@
       "packageName": "compat-jest25",
       "projectFolder": "tests/compat-jest25",
       "shouldPublish": false
+    },
+    {
+      "packageName": "compat-jest26",
+      "projectFolder": "tests/compat-jest26",
+      "shouldPublish": false
+    },
+    {
+      "packageName": "compat-jest27",
+      "projectFolder": "tests/compat-jest27",
+      "shouldPublish": false
     }
     // {
     //   /**
