@@ -276,7 +276,7 @@ Besides just `integral`, `@propcheck/core` comes with quite a few other generato
 
 This module is responsible for running your tests. It is written in such a way as to be entirely agnostic of which context it is being run in, and to easily be run in a deterministic fashion. Ie, given the same input, all exported functions of `Runner` will always yield the same result.
 
-There are two primary functions exported by `Runner`: `given`, and `shrink`. `given` is the entry point to running a check, you do so by providing it the argument generators for the property, and then invoking `check` what it returns:
+There are two primary functions exported by `Runner`: `given`, and `shrink`. `given` is the entry point to running a check, you do so by providing it the argument generators for the property, and then invoking `check` on what it returns:
 
 ```ts
 import { Runner } from '@propcheck/core';
