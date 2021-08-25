@@ -17,14 +17,18 @@ function reverseReverseIsId(arr: Array<unknown>) {
 }
 ```
 
-Here, we used Jest/Jasmine `expect` for simplicity, but we could have used any deep array comparison operation, really. What the framework does for you, is generate hundreds, or even thousands of possible arrays to test this property with and then report any input array it could find for which the property did not hold. This works for any number of arguments and types, so long as you can provie a way for Propcheck to generate them (you can read more about generators in the [@propcheck/core](https://github.com/beark/propcheck/tree/master/packages/propcheck-core) documentation). For example, here is another simple property: plus should satisfy associativity:
+Here, we used Jest/Jasmine `expect` for simplicity, but we could have used any deep array comparison operation, really. What the framework does for you, is generate hundreds, or even thousands of possible arrays to test this property with and then report any input array it could find for which the property did not hold. This works for any number of arguments and types, so long as you can provide a way for Propcheck to generate them (you can read more about generators in the [@propcheck/core](https://github.com/beark/propcheck/tree/master/packages/propcheck-core) documentation). For example, here is another simple property: plus should satisfy associativity:
 ```ts
 function plusIsAssoc(a: number, b: number, c: number) {
     return a + (b + c) === (a + b) + c;
 }
 ```
 
- In fact, most of these frameworks (including Propcheck) do even more for you than that: they will also try to _shrink_ any value for which the property fails before reporting it to you. What exactly "shrinking" means may depend on the data type, but some common ways of shrinking include:
+Note that in this case, we used a simple `boolean` return value to communicate the outcome (whether the property held for the given inputs or not). Propcheck generally allows for two ways of signalling success/failure:
+- Via `boolean`-ish return value. In particular, anything truthy is considered a success, and anything falsy -- except `undefined` -- is considered a failure. Note that `undefined` is assumed to mean _no_ return value, not a falsy return!
+- Via exception. If the property function throws anything at all, the property is considered falsified.
+
+Most property-based testing frameworks (including Propcheck) do even more for you than just test a property: they will also try to _shrink_ any value for which the property fails before reporting it to you. What exactly "shrinking" means may depend on the data type, but some common ways of shrinking include:
 
 - Nudging a number smaller/closer to 0.
 - Cutting elements off an array to make it shorter.

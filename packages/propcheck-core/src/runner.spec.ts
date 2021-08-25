@@ -5,6 +5,7 @@ import { towardsIntegral } from "./shrink"
 import Tree from "./Tree"
 
 const trivialPass = (..._: unknown[]) => true
+const passWithoutReturn = () => {}
 
 function failingProp(a: number, b: number): boolean {
     return a === b
@@ -25,6 +26,14 @@ describe("Runner", () => {
             expect(result).toMatchObject({
                 pass: true,
                 propName: trivialPass.name,
+            })
+        })
+
+        it("should always return a passing result for a property that neither throws nor returns anything", () => {
+            const result = given().check(passWithoutReturn)
+            expect(result).toMatchObject({
+                pass: true,
+                propName: passWithoutReturn.name,
             })
         })
 
@@ -102,9 +111,7 @@ describe("Runner", () => {
         it("should override the start size, when given one", () => {
             const gen = Gen.sized(n => Gen.const(n))
             const prop = jest.fn(() => true)
-            given(gen)
-                .withOptions({ startSize: 50, iterations: 1 })
-                .check(prop)
+            given(gen).withOptions({ startSize: 50, iterations: 1 }).check(prop)
 
             expect(prop.mock.calls).toEqual([[50]])
         })
@@ -112,9 +119,7 @@ describe("Runner", () => {
         it("should override the max size, when given one", () => {
             const gen = Gen.sized(n => Gen.const(n))
             const prop = jest.fn(() => true)
-            given(gen)
-                .withOptions({ maxSize: 50, iterations: 5 })
-                .check(prop)
+            given(gen).withOptions({ maxSize: 50, iterations: 5 }).check(prop)
 
             expect(prop.mock.calls).toEqual([[3], [14], [26], [38], [50]])
         })

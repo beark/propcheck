@@ -381,7 +381,8 @@ function check<TArgs extends unknown[]>(
     ...args: TArgs
 ): CheckResult {
     try {
-        if (prop(...args) === true) {
+        const result = prop(...args)
+        if (!!result || result === undefined) {
             return { ok: true }
         }
     } catch (e) {
