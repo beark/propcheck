@@ -1,6 +1,6 @@
 import { Gen, Generators } from "@propcheck/core"
 import { makeSeedState } from "@propcheck/core/prng"
-import "."
+import { given } from "."
 
 /* eslint @typescript-eslint/no-explicit-any: 0 */
 
@@ -39,7 +39,7 @@ describe("Expecting a property forall arguments", () => {
         )
     })
 
-    it("should fail when a proeprty fails by return value", () => {
+    it("should fail when a property fails by return value", () => {
         const prop = (_: number) => false
 
         expect(() => expect(prop).forall(Generators.nat)).toThrow()
@@ -327,6 +327,22 @@ describe("Expecting a property forall arguments", () => {
             expect.assertions(4 * seeds.length)
         })
     })
+})
+
+const tautology = () => true
+
+describe("given", () => {
+    // This is not a thorough test of given, operation, shouldSatisfy. In
+    // particular, we cannot test its failure modes, nor its test setup (that it
+    // yields the correct `describe`s and `it`s). But we can at least test that
+    // these calls succeed.
+    given().shouldSatisfy(tautology)
+    given(Generators.nat).shouldSatisfy(tautology)
+    given().operation("op").shouldSatisfy(tautology)
+    given(Generators.nat)
+        .withOptions({ iterations: 50 })
+        .operation("op")
+        .shouldSatisfy(tautology)
 })
 
 const seeds = [

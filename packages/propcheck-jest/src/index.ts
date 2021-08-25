@@ -1,12 +1,198 @@
-import Gen from "@propcheck/core/Gen"
+import Gen, { GeneratedType } from "@propcheck/core/Gen"
 import {
-    given,
+    given as givenCore,
     PropCheckFailure,
     PropCheckOpts,
     shrink,
 } from "@propcheck/core/runner"
 
 import { SeedState } from "@propcheck/core/prng"
+
+export type GeneratedTypes<T> = {
+    [K in keyof T]: GeneratedType<T[K]>
+}
+
+/**
+ * Options that can be used to configure a propcheck run that was set up using
+ * `given`.
+ */
+export type GivenOptions = {
+    /**
+     * Gives a name to the operation under test.
+     *
+     * Any name provided by the `operation` combinator will be overriden by
+     * this. If not provided by either method, no `describe` containing an
+     * operation name will be generated.
+     */
+    operation?: string
+    /**
+     * Gives a name to the property under test.
+     *
+     * If not provided, the name of the property is assumed to be the name of
+     * the function given as property. If an anonymous function is given,
+     * the test will have no property name.
+     */
+    property?: string
+} & Partial<PropCheckOpts>
+
+export type Given<TArgs extends unknown[]> = {
+    /**
+     * Defines the property to be under test.
+     *
+     * @param prop
+     *   Function that defines the property under test. Should either throw, or
+     *   return something defined but falsy on failure.
+     */
+    shouldSatisfy: (prop: (...args: TArgs) => unknown) => void
+    /**
+     * Defines the property to be under test.
+     *
+     * Further, _focuses_ on this particular property test (like Jest's `fit`).
+     *
+     * @param prop
+     *   Function that defines the property under test. Should either throw, or
+     *   return something defined but falsy on failure.
+     */
+    fshouldSatisfy: (prop: (...args: TArgs) => unknown) => void
+    /**
+     * Provide a set of options for the generated test.
+     *
+     * @see GivenOptions
+     */
+    withOptions: (options: GivenOptions) => Omit<Given<TArgs>, "withOptions">
+    /**
+     * Give a name to the general operation for which the property test applies.
+     *
+     * @param {string} name The name of the operation.
+     *
+     * @example
+     * given(nat, nat, nat)
+     *   .operation("plus")
+     *   .shouldSatisfy(assoc);
+     *
+     * // Equivalent test without the short-hands:
+     * describe("plus", () => {
+     *   it("should satisfy the property 'assoc'", () => {
+     *     expect(assoc).forall(nat, nat, nat);
+     *   });
+     * });
+     */
+    operation: (name: string) => {
+        /**
+         * Defines the property to be under test.
+         *
+         * @param prop
+         *   Function that defines the property under test. Should either throw,
+         *   or return something defined but falsy on failure.
+         */
+        shouldSatisfy: (prop: (...args: TArgs) => unknown) => void
+        /**
+         * Defines the property to be under test.
+         *
+         * Further, _focuses_ on this particular property test (like Jest's
+         * `fit`).
+         *
+         * @param prop
+         *   Function that defines the property under test. Should either throw,
+         *   or return something defined but falsy on failure.
+         */
+        fshouldSatisfy: (prop: (...args: TArgs) => unknown) => void
+    }
+}
+
+/**
+ * Short-hand function to define a property test.
+ *
+ * @param {TArgs} gens
+ *   Generators that will be used as input sources for the property under test.
+ * @returns
+ * @template TArgs Type of generator arguments.
+ *
+ * @example
+ * given(nat).operation("plus one").shouldSatisfy(positive);
+ */
+export function given<TArgs extends Gen<unknown>[]>(
+    ...gens: TArgs
+): Given<GeneratedTypes<TArgs>> {
+    return {
+        withOptions: opts => ({
+            shouldSatisfy: prop => runGiven(gens, prop, opts),
+            // Ignore coverage of fshouldSatisfy, since we cannot test it
+            fshouldSatisfy: /* istanbul ignore next */ prop =>
+                frunGiven(gens, prop, opts),
+            operation: name =>
+                given(...gens).withOptions({ operation: name, ...opts }),
+        }),
+        operation: name => ({
+            shouldSatisfy: prop => {
+                runGiven(gens, prop, { operation: name })
+            },
+            fshouldSatisfy: /* istanbul ignore next */ prop => {
+                frunGiven(gens, prop, { operation: name })
+            },
+        }),
+        shouldSatisfy: prop => runGiven(gens, prop, {}),
+        fshouldSatisfy: /* istanbul ignore next */ prop =>
+            frunGiven(gens, prop, {}),
+    }
+}
+
+function runGiven<TGens extends Gen<unknown>[]>(
+    gens: TGens,
+    prop: (...args: GeneratedTypes<TGens>) => unknown,
+    options: GivenOptions,
+): void {
+    const { operation, property = prop.name, ...remOpts } = options
+
+    if (operation === undefined) {
+        describe(`The property ${property}`, () => {
+            it("should be satisfied for all inputs", () => {
+                expect(prop).forallWithOptions(
+                    remOpts,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...(gens as any),
+                )
+            })
+        })
+        return
+    }
+
+    describe(operation, () => {
+        it(`should satisfy ${property} for all inputs`, () => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect(prop).forallWithOptions(remOpts, ...(gens as any))
+        })
+    })
+}
+
+/* istanbul ignore next */
+function frunGiven<TGens extends Gen<unknown>[]>(
+    gens: TGens,
+    prop: (...args: GeneratedTypes<TGens>) => unknown,
+    options: GivenOptions,
+): void {
+    const { operation, property = prop.name, ...remOpts } = options
+
+    if (operation === undefined) {
+        describe(`The property ${property}`, () => {
+            fit("should be satisfied for all inputs", () => {
+                expect(prop).forallWithOptions(
+                    remOpts,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...(gens as any),
+                )
+            })
+        })
+        return
+    }
+
+    describe(operation, () => {
+        fit(`should satisfy ${property} for all inputs`, () => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            expect(prop).forallWithOptions(remOpts, ...(gens as any))
+        })
+    })
+}
 
 type Forall<R, T> = T extends (...args: infer TParams) => unknown
     ? (...generators: { [K in keyof TParams]: Gen<TParams[K]> }) => R
@@ -137,7 +323,7 @@ function forall(
             k => config[k] === undefined && delete config[k],
         )
 
-        const result = given(...generators)
+        const result = givenCore(...generators)
             .withOptions(options)
             // Environment options take presedence
             .withOptions(config)
