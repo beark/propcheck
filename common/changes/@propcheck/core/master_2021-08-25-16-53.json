@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@propcheck/core",
+      "comment": "Allow any truthy value, and `undefined`, to indicate that a property held, and all falsy values (except `undefined`) to indicate that it was falsified",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@propcheck/core",
+  "email": "bjorn.aili@gmail.com"
+}

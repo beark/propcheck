@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@propcheck/jest",
+      "comment": "Add `given` convenience function to define a test in one line.",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@propcheck/jest",
+  "email": "bjorn.aili@gmail.com"
+}
