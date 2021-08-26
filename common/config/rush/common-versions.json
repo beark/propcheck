@@ -38,7 +38,7 @@
    * After modifying this field, it's recommended to run "rush update --full" so that the package manager
    * will recalculate all version selections.
    */
-  // "implicitlyPreferredVersions": false,
+  "implicitlyPreferredVersions": false,
 
   /**
    * The "rush check" command can be used to enforce that every project in the repo must specify
@@ -54,7 +54,8 @@
     "@propcheck/core": ["0.9.0"],
     "@types/jest": ["24.0.20", "25.1.5"],
     "jest": ["24.1.0", "25.2.7", "26.6.3"],
-    "ts-jest": ["24.1.0", "25.3.1", "26.5.4"]
+    "ts-jest": ["24.1.0", "25.3.1", "26.5.4"],
+    "typescript": ["~3.9.10"]
     /**
      * For example, allow some projects to use an older TypeScript compiler
      * (in addition to whatever "usual" version is being used by other projects in the repo):
