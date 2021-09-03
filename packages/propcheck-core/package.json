@@ -73,7 +73,7 @@
         ]
     },
     "dependencies": {
-        "lazy-sequences": "^1.0.0",
+        "lazy-sequences": "^2.0.0",
         "tslib": "^2.3.0"
     },
     "devDependencies": {
