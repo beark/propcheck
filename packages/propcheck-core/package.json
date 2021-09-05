@@ -1,11 +1,12 @@
 {
     "name": "@propcheck/core",
-    "version": "0.9.0",
+    "version": "0.10.0",
     "description": "Core library of propcheck, a property based testing suite",
     "license": "MIT",
     "main": "index.js",
     "types": "index.d.ts",
     "files": [
+        "CHANGELOG.md",
         "generators/*.js",
         "generators/*.d.ts",
         "Gen.d.ts",
