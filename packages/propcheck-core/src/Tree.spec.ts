@@ -8,7 +8,9 @@ describe("Tree", () => {
     describe("from", () => {
         it("should correctly construct the singleton tree", () => {
             const sing = Tree.from([0, []])
+
             expect(sing).toEqual(Tree.singleton(0))
+            expect([...sing]).toEqual([...Tree.singleton(0)])
         })
 
         it("[sanity] should correctly construct some example trees", () => {
@@ -27,6 +29,42 @@ describe("Tree", () => {
             expect(t0).toEqual(tree0)
             expect(t1).toEqual(tree1)
             expect(t2).toEqual(unfoldedTree)
+        })
+
+        it("should work with exotic iterables, not just arrays", () => {
+            const generator = function* () {
+                yield 1
+                yield [2, [3, 4]] as [2, [3, 4]]
+                yield 3
+            }
+
+            const t0 = Tree.from([0, Seq.enumFrom(1).take(4)])
+            const t1 = Tree.from([0, { [Symbol.iterator]: () => generator() }])
+
+            expect([...t0]).toEqual([0, 1, 2, 3, 4])
+            expect([...t0.breadthFirst()]).toEqual([0, 1, 2, 3, 4])
+            expect([...t1]).toEqual([0, 1, 2, 3, 4, 3])
+            expect([...t1.breadthFirst()]).toEqual([0, 1, 2, 3, 3, 4])
+        })
+    })
+
+    describe("unfold", () => {
+        it("[sanity] should correclty construct an example tree", () => {
+            // 0
+            // |-- 1
+            // |   |-- 2
+            // |   |   |-- 3
+            // |   |   `-- 4
+            // |   `-- 3
+            // `-- 2
+            //     |-- 3
+            //     `-- 4
+            const t = Tree.unfold(
+                n => (n > 2 ? Seq.empty() : Seq.enumFrom(n + 1).take(2)),
+                0,
+            )
+            expect([...t]).toEqual([0, 1, 2, 3, 4, 3, 2, 3, 4])
+            expect([...t.breadthFirst()]).toEqual([0, 1, 2, 2, 3, 3, 4, 3, 4])
         })
     })
 
@@ -71,6 +109,16 @@ describe("Tree", () => {
                     2 * x + 1 > 7 ? Seq.empty() : new Seq([2 * x, 2 * x + 1]),
                 ),
             ).toEqual(unfoldedTree)
+        })
+    })
+
+    describe("breadthFirst", () => {
+        it("should iterate known trees breadth first", () => {
+            expect([...tree0.breadthFirst()]).toEqual([0, 1, 2, 3])
+            expect([...tree1.breadthFirst()]).toEqual([1, 2, 3, 4])
+            expect([...unfoldedTree.breadthFirst()]).toEqual([
+                1, 2, 3, 2, 3, 4, 5, 4, 6, 7, 4, 5, 6, 7,
+            ])
         })
     })
 })

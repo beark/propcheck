@@ -43,16 +43,13 @@ export class Tree<T> implements Iterable<T> {
      * //     `-- 4
      */
     static from<T>(t: TreeLike<T>): Tree<T> {
-        const children = []
-        for (const c of t[1]) {
-            if (Array.isArray(c)) {
-                children.push(Tree.from(c))
-            } else {
-                children.push(Tree.singleton(c))
-            }
-        }
+        const children = new Seq(t[1]).map(leafOrTree =>
+            Array.isArray(leafOrTree)
+                ? Tree.from(leafOrTree)
+                : Tree.singleton(leafOrTree),
+        )
 
-        return new Tree(t[0], new Seq(children))
+        return new Tree(t[0], children)
     }
 
     /**
@@ -87,8 +84,22 @@ export class Tree<T> implements Iterable<T> {
         public readonly children: Seq<Tree<T>>,
     ) {}
 
+    /**
+     * Depth first iteration of the tree.
+     *
+     * @returns {IterableIterator<T>}
+     */
     [Symbol.iterator](): IterableIterator<T> {
-        return iterateTree(this)
+        return depthFirst(this)
+    }
+
+    /**
+     * Breadth first iteration of the tree, in the form of a Sequence.
+     *
+     * @returns {Seq<T>}
+     */
+    breadthFirst(): Seq<T> {
+        return new Seq({ [Symbol.iterator]: () => breadthFirst(this) })
     }
 
     /**
@@ -121,7 +132,7 @@ export class Tree<T> implements Iterable<T> {
      * Expand the tree with an unfolding function.
      *
      * Each step of recursion will unfold on the current node's value (similarly
-     * to how {@link Tree#unfold} generates children at a given level) and
+     * to how {@link Tree.unfold} generates children at a given level) and
      * concatenate those to the result of `expand`ing all of the node's existing
      * children (ie, this is the recursion step).
      *
@@ -179,7 +190,7 @@ export class Tree<T> implements Iterable<T> {
 
 export default Tree
 
-function* iterateTree<T>(tree: Tree<T>) {
+function* depthFirst<T>(tree: Tree<T>) {
     yield tree.value
 
     for (const child of tree.children) {
@@ -189,6 +200,18 @@ function* iterateTree<T>(tree: Tree<T>) {
     }
 }
 
+function* breadthFirst<T>(tree: Tree<T>) {
+    const queue = [tree]
+
+    while (queue.length > 0) {
+        const { value, children } = queue.shift()!
+        yield value
+        for (const child of children) {
+            queue.push(child)
+        }
+    }
+}
+
 function unfoldForest<T>(unf: (x: T) => Seq<T>, x: T): Seq<Tree<T>> {
-    return unf(x).map(seq => Tree.unfold(unf, seq))
+    return unf(x).map(y => Tree.unfold(unf, y))
 }
