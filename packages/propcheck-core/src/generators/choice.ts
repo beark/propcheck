@@ -165,7 +165,8 @@ export function frequency_<T>(...gens: WeightedGen<T>[]): Gen<T> {
  * divided by the sum of all weights.
  *
  * - Picked generator determines growth properties.
- * - Shrinks towards the first given generator.
+ * - Shrinks both towards the first given generator, and according to whatever
+ *   generator was picked.
  *
  * @nosideffects
  * @param {WeightedGen<T>[]} gens
