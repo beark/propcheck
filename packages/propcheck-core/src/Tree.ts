@@ -203,10 +203,11 @@ function* depthFirst<T>(tree: Tree<T>) {
 function* breadthFirst<T>(tree: Tree<T>) {
     const queue = [tree]
 
+    yield tree.value
     while (queue.length > 0) {
-        const { value, children } = queue.shift()!
-        yield value
+        const { children } = queue.shift()!
         for (const child of children) {
+            yield child.value
             queue.push(child)
         }
     }

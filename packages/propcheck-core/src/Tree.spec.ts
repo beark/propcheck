@@ -120,6 +120,23 @@ describe("Tree", () => {
                 1, 2, 3, 2, 3, 4, 5, 4, 6, 7, 4, 5, 6, 7,
             ])
         })
+
+        it("should make progress even when a tree has infinite children", () => {
+            const inf = new Tree(0, Seq.enumFrom(1).map(Tree.singleton))
+
+            let iters = 0
+            for (const v of inf.breadthFirst()) {
+                if (iters == 50) {
+                    break
+                }
+
+                expect(v).toBe(iters)
+
+                ++iters
+            }
+
+            expect.assertions(50)
+        })
     })
 })
 
