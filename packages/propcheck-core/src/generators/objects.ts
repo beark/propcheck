@@ -20,7 +20,7 @@ export type ObjectGenerator<T> = { [K in keyof T]: Gen<T[K]> }
  * @nosideeffects
  * @param {ObjectGenerator<T>} gen
  *   Effectively a set of key/generator pairs, where each will be used to
- *   compose a generator objects of the desired type.
+ *   compose a generator of objects of the desired type.
  * @returns {Gen<T>}
  * @template T
  * @example
