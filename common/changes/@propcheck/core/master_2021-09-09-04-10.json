@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@propcheck/core",
+      "comment": "Add breadth first iteration of trees.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@propcheck/core"
+}
