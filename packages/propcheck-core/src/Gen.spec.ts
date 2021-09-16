@@ -78,6 +78,32 @@ describe("Gen", () => {
                 }
             }
         })
+
+        it("should generate the shrink tree of the picked generator", () => {
+            const g0 = Gen.const(0).shrink(_ => new Seq([1]))
+            const g1 = Gen.const(1).shrink(_ => new Seq([2, 3]))
+            const seqGen = Gen.sequence(g0, g1)
+
+            for (const seed of seeds) {
+                const t0 = seqGen.run(0, seed, 0)
+                const t1 = seqGen.run(0, seed, 1)
+
+                expect([...t0]).toEqual([0, 1])
+                expect([...t1]).toEqual([1, 2, 3])
+            }
+        })
+
+        it("should not include predecessors in shrink trees", () => {
+            const g0 = Gen.const(0).shrink(_ => new Seq([1, 2]))
+            const g1 = Gen.const(3).shrink(_ => new Seq([4, 5]))
+            const seqGen = Gen.sequence(g0, g1)
+
+            for (const seed of seeds) {
+                const t = seqGen.run(0, seed, 1)
+
+                expect([...t]).toEqual([3, 4, 5])
+            }
+        })
     })
 
     describe("generate", () => {
@@ -229,12 +255,10 @@ describe("Gen", () => {
 
                 let curSeed = seed
                 for (let i = 0; i < 10; ++i) {
-                    const lhs = G.nat.map(x => f(g(x))).run(10, curSeed, 0)
-                        .value
-                    const rhs = G.nat
-                        .map(g)
-                        .map(f)
+                    const lhs = G.nat
+                        .map(x => f(g(x)))
                         .run(10, curSeed, 0).value
+                    const rhs = G.nat.map(g).map(f).run(10, curSeed, 0).value
 
                     expect(lhs).toBe(rhs)
 
