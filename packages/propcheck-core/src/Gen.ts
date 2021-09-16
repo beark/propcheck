@@ -56,7 +56,7 @@ export class Gen<T> {
      * Sequence a set of generators such that they are run in order.
      *
      * Ie, first iteration of a property test, the first generator gets run,
-     * seconds generation runs the second generator, and so on. When the
+     * second generation runs the second generator, and so on. When the
      * iteration count is greater than or equal to the generator count, the last
      * generator gets called.
      *
