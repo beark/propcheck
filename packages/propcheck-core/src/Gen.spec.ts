@@ -188,7 +188,7 @@ describe("Gen", () => {
         it("should add shrinks to any existing set", () => {
             const gen = Gen.const(10)
                 .shrink(x => towardsIntegral(0, x))
-                .shrinkRecursively(_ => Seq.singleton(100))
+                .shrinkRecursively(_ => [100])
 
             const cs = gen.run(0, seeds[0], 0).children
             expect([...cs.map(t => t.value)]).toEqual([0, 5, 8, 9, 100])

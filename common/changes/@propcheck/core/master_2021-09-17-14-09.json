@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@propcheck/core",
+      "comment": "Relax constraint on returned shrinks to `Iterable<T>` instead of `Seq<T>`.",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@propcheck/core"
+}

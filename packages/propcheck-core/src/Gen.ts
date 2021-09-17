@@ -294,18 +294,18 @@ export class Gen<T> {
      * ```
      *
      * @nosideffects
-     * @param {(x: T) => Seq<T>} f
+     * @param {(x: T) => Iterable<T>} f
      *   Function that, given some value, should return its possible shrinks as
      *   a sequence.
      * @returns {Gen<T>}
      */
-    shrink(f: (x: T) => Seq<T>): Gen<T> {
+    shrink(f: (x: T) => Iterable<T>): Gen<T> {
         return new Gen((sz, st, i) => {
             const t = this.run(sz, st, i)
             return new Tree(
                 t.value,
                 t.children.concat(
-                    f(t.value).map(x => new Tree(x, Seq.empty())),
+                    new Seq(f(t.value)).map(x => new Tree(x, Seq.empty())),
                 ),
             )
         })
@@ -316,12 +316,12 @@ export class Gen<T> {
      * _recusively_.
      *
      * @nosideffects
-     * @param {(x: T) => Seq<T>} f
+     * @param {(x: T) => Iterable<T>} f
      *   Function that, given some value, should returns its possible shrinks as
      *   a sequence.
      * @returns {Gen<T>}
      */
-    shrinkRecursively(f: (x: T) => Seq<T>): Gen<T> {
+    shrinkRecursively(f: (x: T) => Iterable<T>): Gen<T> {
         return new Gen((sz, st, i) => this.run(sz, st, i).expand(f))
     }
 

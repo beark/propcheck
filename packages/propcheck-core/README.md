@@ -167,13 +167,13 @@ declare const n: Gen<number>
 n.shrink(num => {
     if (num > 100) {
         // For numbers > 100, they can be shrunk to 0, 50, and 75
-        return new Seq([0, 50, 75]);
+        return [0, 50, 75];
     } else if (num > 0) {
         // Numbers greater than 0 but smaller than 100 can only shrink to 0
-        return Seq.singleton(0);
+        return [0];
     } else {
         // Nothing else can be shrunk
-        return Seq.empty();
+        return [];
     }
 });
 ```

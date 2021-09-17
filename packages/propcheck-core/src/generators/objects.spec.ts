@@ -2,7 +2,6 @@ import { Gen } from "../Gen"
 import { makeSeedState, SeedState } from "../prng"
 import Range from "../Range"
 import * as G from "."
-import Seq from "lazy-sequences"
 
 describe("generators/objects", () => {
     describe("obj_", () => {
@@ -118,8 +117,8 @@ describe("generators/objects", () => {
 
         it("[sanity] shrink trees", () => {
             const g = G.obj({
-                a: Gen.const(0).shrink(_ => Seq.singleton(1)),
-                b: Gen.const("a").shrink(_ => Seq.singleton("b")),
+                a: Gen.const(0).shrink(_ => [1]),
+                b: Gen.const("a").shrink(_ => ["b"]),
             })
 
             for (const seed of seeds) {

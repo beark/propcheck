@@ -60,14 +60,14 @@ export class Tree<T> implements Iterable<T> {
      *
      * This method is effectful only if `unf` is.
      *
-     * @param {(x: T) => Seq<T>} unf
+     * @param {(x: T) => Iterable<T>} unf
      *   Unfolding function to apply recursively on leafs to generate the sub-
      *   children.
      * @param {T} x The initial value to begin the unfold from. Will be the
      *   value of the root node.
      * @template T
      */
-    static unfold<T>(unf: (x: T) => Seq<T>, x: T): Tree<T> {
+    static unfold<T>(unf: (x: T) => Iterable<T>, x: T): Tree<T> {
         return new Tree(x, unfoldForest(unf, x))
     }
 
@@ -147,10 +147,10 @@ export class Tree<T> implements Iterable<T> {
      * effect free, but iterating the result might not be.
      *
      * @nosideeffects
-     * @param {(x: T) => Seq<T>} unf The unfolding function.
+     * @param {(x: T) => Iterable<T>} unf The unfolding function.
      * @returns {Tree<T>}
      */
-    expand(unf: (x: T) => Seq<T>): Tree<T> {
+    expand(unf: (x: T) => Iterable<T>): Tree<T> {
         return new Tree(
             this.value,
             this.children
@@ -213,6 +213,6 @@ function* breadthFirst<T>(tree: Tree<T>) {
     }
 }
 
-function unfoldForest<T>(unf: (x: T) => Seq<T>, x: T): Seq<Tree<T>> {
-    return unf(x).map(y => Tree.unfold(unf, y))
+function unfoldForest<T>(unf: (x: T) => Iterable<T>, x: T): Seq<Tree<T>> {
+    return new Seq(unf(x)).map(y => Tree.unfold(unf, y))
 }
