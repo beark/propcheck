@@ -1,64 +1,90 @@
-import { makeSeedState } from "../prng"
+import { makeSeedState, step } from "../prng"
 import { optional, nullable, optionalNullable } from "./optionals"
 import Gen from "../Gen"
 
 describe("generators/optionals", () => {
     describe("optional", () => {
-        it("should always generate undefined on iteration 1", () => {
-            const g = optional(Gen.const(1))
+        it("should generate a mix of undefineds and defineds", () => {
+            const g = optional(Gen.const(1)).repeat(100)
             for (const s of seeds) {
-                expect(g.run(10, s, 0).value).toBe(undefined)
+                const t = g.run(10, s, 0).value
+
+                expect(t.filter(x => x === 1).length).toBeGreaterThan(0)
+                expect(t.filter(x => x === undefined).length).toBeGreaterThan(0)
             }
         })
 
-        it("should always pick the given generator for all subsequent iterations", () => {
-            const g = optional(Gen.const(1))
-            for (const s of seeds) {
+        it("should generate the appropriate shrink tree for the defined case", () => {
+            const g = optional(Gen.const(1).shrink(_ => [3, 4]))
+            for (let s of seeds) {
                 for (let i = 1; i < 101; i += 10) {
-                    expect(g.run(10, s, i).value).toBe(1)
+                    const t = g.run(10, s, i)
+                    if (typeof t.value !== "undefined") {
+                        expect([...t]).toEqual([1, 3, 4])
+                    } else {
+                        expect([...t]).toEqual([undefined])
+                    }
+
+                    s = step(s)
                 }
             }
         })
     })
 
     describe("nullable", () => {
-        it("should always generate null on iteration 1", () => {
-            const g = nullable(Gen.const(1))
+        it("should generate a mix of nulls and non-nulls", () => {
+            const g = nullable(Gen.const(1)).repeat(100)
             for (const s of seeds) {
-                expect(g.run(10, s, 0).value).toBe(null)
+                const t = g.run(10, s, 0).value
+
+                expect(t.filter(x => x === 1).length).toBeGreaterThan(0)
+                expect(t.filter(x => x === null).length).toBeGreaterThan(0)
             }
         })
 
-        it("should always pick the given generator for all subsequent iterations", () => {
-            const g = nullable(Gen.const(1))
-            for (const s of seeds) {
+        it("should generate the appropriate shrink tree for the non-null case", () => {
+            const g = nullable(Gen.const(1).shrink(_ => [3, 4]))
+            for (let s of seeds) {
                 for (let i = 1; i < 101; i += 10) {
-                    expect(g.run(10, s, i).value).toBe(1)
+                    const t = g.run(10, s, i)
+                    if (t.value !== null) {
+                        expect([...t]).toEqual([1, 3, 4])
+                    } else {
+                        expect([...t]).toEqual([null])
+                    }
+
+                    s = step(s)
                 }
             }
         })
     })
 
     describe("optionalNullable", () => {
-        it("should always generate undefined on iteration 1", () => {
-            const g = optionalNullable(Gen.const(1))
+        it("should generate a mix of undefineds, nulls, and regular values", () => {
+            const g = optionalNullable(Gen.const(1)).repeat(100)
             for (const s of seeds) {
-                expect(g.run(10, s, 0).value).toBe(undefined)
+                const t = g.run(10, s, 0).value
+
+                expect(t.filter(x => x === 1).length).toBeGreaterThan(0)
+                expect(t.filter(x => x === undefined).length).toBeGreaterThan(0)
+                expect(t.filter(x => x === null).length).toBeGreaterThan(0)
             }
         })
 
-        it("should always generate null on iteration 2", () => {
-            const g = optionalNullable(Gen.const(1))
-            for (const s of seeds) {
-                expect(g.run(10, s, 1).value).toBe(null)
-            }
-        })
+        it("should generate the appropriate shrink tree for the defined case", () => {
+            const g = optionalNullable(Gen.const(1).shrink(_ => [3, 4]))
+            for (let s of seeds) {
+                for (let i = 1; i < 101; i += 10) {
+                    const t = g.run(10, s, i)
+                    if (typeof t.value === "number") {
+                        expect([...t]).toEqual([1, 3, 4])
+                    } else if (t.value === null) {
+                        expect([...t]).toEqual([null])
+                    } else {
+                        expect([...t]).toEqual([undefined])
+                    }
 
-        it("should always pick the given generator for all subsequent iterations", () => {
-            const g = optionalNullable(Gen.const(1))
-            for (const s of seeds) {
-                for (let i = 2; i < 101; i += 10) {
-                    expect(g.run(10, s, i).value).toBe(1)
+                    s = step(s)
                 }
             }
         })

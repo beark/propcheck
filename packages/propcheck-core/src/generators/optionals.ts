@@ -1,3 +1,4 @@
+import { frequency_ } from "."
 import Gen from "../Gen"
 
 /**
@@ -17,7 +18,16 @@ import Gen from "../Gen"
  * @template T The generated type of `g`.
  */
 export function optional<T>(g: Gen<T>): Gen<T | undefined> {
-    return Gen.sequence(Gen.const(undefined), g)
+    return frequency_(
+        {
+            weight: 1,
+            gen: Gen.const(undefined),
+        },
+        {
+            weight: 9,
+            gen: g,
+        },
+    )
 }
 
 /**
@@ -37,7 +47,16 @@ export function optional<T>(g: Gen<T>): Gen<T | undefined> {
  * @template T The generated type of `g`.
  */
 export function nullable<T>(g: Gen<T>): Gen<T | null> {
-    return Gen.sequence(Gen.const(null), g)
+    return frequency_(
+        {
+            weight: 1,
+            gen: Gen.const(null),
+        },
+        {
+            weight: 9,
+            gen: g,
+        },
+    )
 }
 
 /**
@@ -57,5 +76,18 @@ export function nullable<T>(g: Gen<T>): Gen<T | null> {
  * @template T The generated type of `g`.
  */
 export function optionalNullable<T>(g: Gen<T>): Gen<T | undefined | null> {
-    return Gen.sequence(Gen.const(undefined), Gen.const(null), g)
+    return frequency_(
+        {
+            weight: 1,
+            gen: Gen.const(undefined),
+        },
+        {
+            weight: 1,
+            gen: Gen.const(null),
+        },
+        {
+            weight: 9,
+            gen: g,
+        },
+    )
 }

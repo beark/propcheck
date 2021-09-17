@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@propcheck/core",
+      "comment": "Implement optional, nullable, and optionalNullable using frequency_ instead of Gen.sequence, to avoid too predictable and non-exhaustive sequences. Especially in multi-parameter properties.",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@propcheck/core"
+}
