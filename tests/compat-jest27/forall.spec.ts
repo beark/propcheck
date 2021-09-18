@@ -1,5 +1,4 @@
 import { Gen } from "@propcheck/core";
-import * as G from "@propcheck/core/generators";
 
 describe("Jest 27", () => {
   describe("forall", () => {
