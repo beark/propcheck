@@ -1,4 +1,7 @@
 {
     "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "exactOptionalPropertyTypes": true /* Differentiate between undefined and not present */
+    },
     "include": ["src/"]
 }

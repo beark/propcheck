@@ -79,7 +79,7 @@ describe("Expecting a property forall arguments", () => {
                 { seed: [0, 1, 2, 3] },
                 Generators.nat,
             )
-        } catch (e) {
+        } catch (e: any) {
             expect(e.message).toMatch(/Seed: {0,1,2,3}/)
         }
 
@@ -92,7 +92,7 @@ describe("Expecting a property forall arguments", () => {
 
         try {
             expect(prop).forallWithOptions({ startSize: 33 }, Generators.nat)
-        } catch (e) {
+        } catch (e: any) {
             expect(e.message).toMatch(/Size: 33/)
         }
 
@@ -120,7 +120,7 @@ describe("Expecting a property forall arguments", () => {
                 { startIteration: 11 },
                 Generators.nat,
             )
-        } catch (e) {
+        } catch (e: any) {
             expect(e.message).toMatch(/11 iterations/)
         }
 
@@ -178,7 +178,7 @@ describe("Expecting a property forall arguments", () => {
                     { seed: [0, 1, 2, 3] },
                     Generators.nat,
                 )
-            } catch (e) {
+            } catch (e: any) {
                 const seedStr = makeSeedState("test")
                     .map(n => n.toString(16))
                     .join(",")
@@ -198,7 +198,7 @@ describe("Expecting a property forall arguments", () => {
                     { startSize: 33 },
                     Generators.nat,
                 )
-            } catch (e) {
+            } catch (e: any) {
                 expect(e.message).toMatch(/Size: 23/)
             }
 
@@ -212,7 +212,7 @@ describe("Expecting a property forall arguments", () => {
 
             try {
                 expect(prop).forall(Generators.nat)
-            } catch (e) {
+            } catch (e: any) {
                 expect(e.message).toMatch(/startSize must be an integer >= 0/)
             }
 
@@ -250,7 +250,7 @@ describe("Expecting a property forall arguments", () => {
                     { startIteration: 11 },
                     Generators.nat,
                 )
-            } catch (e) {
+            } catch (e: any) {
                 expect(e.message).toMatch(/21 iterations/)
             }
 
@@ -297,7 +297,7 @@ describe("Expecting a property forall arguments", () => {
             for (const seed of seeds) {
                 try {
                     expect(prop).forallWithOptions({ seed }, Generators.nat)
-                } catch (e) {
+                } catch (e: any) {
                     const message: string = e.message
 
                     const startIter = /failed after ([0-9]+) iter/.exec(

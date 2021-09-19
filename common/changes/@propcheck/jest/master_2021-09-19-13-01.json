@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@propcheck/jest",
+      "comment": "Update TypeScript version to 4.4.3.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@propcheck/jest"
+}
