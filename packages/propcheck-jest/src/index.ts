@@ -349,15 +349,16 @@ function forall(
             }
         }
     } catch (e) {
-        const errString =
-            typeof e === "object" && e !== null
-                ? utils.utils.stringify(e)
-                : JSON.stringify(e)
-
         return {
             pass: utils.isNot ? true : false,
-            message: () =>
-                `Error caught when trying to run propcheck: ${errString}`,
+            message: () => {
+                const errString =
+                    typeof e === "object" && e !== null
+                        ? utils.utils.stringify(e)
+                        : JSON.stringify(e)
+
+                return `Error caught when trying to run propcheck: ${errString}`
+            },
         }
     }
 }

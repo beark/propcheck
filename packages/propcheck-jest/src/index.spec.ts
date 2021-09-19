@@ -1,5 +1,6 @@
 import { Gen, Generators } from "@propcheck/core"
 import { makeSeedState } from "@propcheck/core/prng"
+import * as R from "@propcheck/core/runner"
 import { given } from "."
 
 /* eslint @typescript-eslint/no-explicit-any: 0 */
@@ -69,6 +70,17 @@ describe("Expecting a property forall arguments", () => {
         expect(() =>
             expect(prop).not.forallWithOptions({ iterations: -1 }),
         ).toThrowError(/iterations must be an integer > 0/)
+    })
+
+    it("should fail if propcheck somehow threw a non-Error value", () => {
+        const prop = () => true
+        const spy = jest.spyOn(R, "given").mockImplementation(() => {
+            /* eslint-disable-next-line no-throw-literal */
+            throw "string failure"
+        })
+
+        expect(() => expect(prop).forall()).toThrowError(/string failure/)
+        spy.mockRestore()
     })
 
     it("should use any configured seed", () => {
