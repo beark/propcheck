@@ -1,6 +1,6 @@
 {
     "name": "@propcheck/core",
-    "version": "0.10.0",
+    "version": "0.11.0",
     "description": "Core library of propcheck, a property based testing suite",
     "license": "MIT",
     "main": "index.js",
