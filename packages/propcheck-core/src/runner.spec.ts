@@ -1,3 +1,4 @@
+import Seq from "lazy-sequences"
 import Gen from "./Gen"
 import { ascii, nat, string } from "./generators"
 import { given, PropCheckFailure, shrink } from "./runner"
@@ -180,6 +181,49 @@ describe("Runner", () => {
             })
             expect(shrink(failAtTen, r2.args)).toMatchObject({
                 smallestFailingArgs: [10, 10],
+            })
+        })
+
+        it("should not try more than the maximum number of shrinks wanted", () => {
+            const r = given(
+                nat.pruneShrinkTree().shrink(_ => Seq.repeat(0)),
+            ).check(failAtTen) as PropCheckFailure<[number]>
+
+            expect(
+                shrink(failAtTen, r.args, {
+                    maxShrinks: 20,
+                }),
+            ).toMatchObject({
+                smallestFailingArgs: [expect.any(Number)],
+                shrinks: 20,
+            })
+        })
+
+        it("should not try more than the maximum number of shrinks wanted per argument", () => {
+            const r = given(
+                nat.pruneShrinkTree().shrink(_ => Seq.repeat(0)),
+                nat.pruneShrinkTree().shrink(_ => Seq.repeat(1)),
+            ).check(failingProp) as PropCheckFailure<[number, number]>
+
+            expect(
+                shrink(failingProp, r.args, {
+                    maxShrinksPerArgument: 9,
+                }),
+            ).toMatchObject({
+                smallestFailingArgs: expect.arrayContaining([0, 1]),
+                shrinks: 18,
+            })
+        })
+
+        it("should by default be limited by per argument shrinks", () => {
+            const r = given(
+                nat.pruneShrinkTree().shrink(_ => Seq.repeat(0)),
+                nat.pruneShrinkTree().shrink(_ => Seq.repeat(1)),
+            ).check(failingProp) as PropCheckFailure<[number, number]>
+
+            expect(shrink(failingProp, r.args)).toMatchObject({
+                smallestFailingArgs: expect.arrayContaining([0, 1]),
+                shrinks: 200,
             })
         })
     })

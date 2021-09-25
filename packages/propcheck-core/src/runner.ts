@@ -201,6 +201,32 @@ export type ShrinkResult<TArgs> = {
     smallestFailingArgs: TArgs
 }
 
+export type ShrinkOptions = {
+    /**
+     * Maximum total shrinks to try before giving up during a call to
+     * {@link shrink}. The smallest arguments found so far will still be
+     * reported.
+     *
+     * Defaults to `Infinity`.
+     */
+    maxShrinks: number
+    /**
+     * Maximum shrinks to try *per argument* during a call to {@link shrink}.
+     *
+     * If, when trying to shrink a specific argument, this number has been
+     * reached, `shrink` will give up and try to shrink the next argument. The
+     * smallest argument found so far will still be reported.
+     *
+     * Defaults to `100`.
+     */
+    maxShrinksPerArgument: number
+}
+
+const defaultShrinkOpts: ShrinkOptions = {
+    maxShrinks: Infinity,
+    maxShrinksPerArgument: 100,
+}
+
 /**
  * Given a set of generators, produce a test runner that can be used to check a
  * matching property.
@@ -231,22 +257,41 @@ export function given<TGens extends Gen<unknown>[]>(
  * @param {[Tree<TArgs[0], Tree<TArgs[1]>, ...]>} args
  *   Shrink trees of all the generated arguments for which the given property
  *   failed.
+ * @param {Partial<ShrinkOptions>} [options]
+ *   Provides a set of {@link ShrinkOptions} for the shrink attempt. Generally,
+ *   thse deal with limiting the number of shrinks to attempt before giving up,
+ *   since certain shrink trees may be infinite.
  * @returns {ShrinkResult<TArgs>}
  * @template TArgs The parameter types of the property.
  */
 export function shrink<TArgs extends unknown[]>(
     prop: (...args: TArgs) => unknown,
     args: ApplyTree<TArgs>,
+    options?: Partial<ShrinkOptions>,
 ): ShrinkResult<TArgs> {
+    const maxShrinks = options?.maxShrinks ?? defaultShrinkOpts.maxShrinks
+    const maxShrinksPerArgument =
+        options?.maxShrinksPerArgument ??
+        defaultShrinkOpts.maxShrinksPerArgument
+
     let shrinks = 0
     const smallestFailingArgs = args.slice().map(t => t.value)
 
     for (let i = 0; i < args.length; ++i) {
-        const singleResult = tryShrinkSingle(prop, args, i)
+        const singleResult = tryShrinkSingle(
+            prop,
+            args,
+            i,
+            Math.min(maxShrinksPerArgument, maxShrinks - shrinks),
+        )
         shrinks += singleResult.shrinks
         if (singleResult.smallestFailingArgs !== undefined) {
             smallestFailingArgs[i] = singleResult.smallestFailingArgs[i]
             args[i] = Tree.singleton(smallestFailingArgs[i])
+        }
+
+        if (shrinks >= maxShrinks) {
+            break
         }
     }
 
@@ -401,6 +446,7 @@ function tryShrinkSingle<TArgs extends unknown[]>(
     prop: (...args: TArgs) => unknown,
     argsTree: ApplyTree<TArgs>,
     i: number,
+    maxShrinks: number,
 ): SingleShrinkResult<TArgs> {
     let localShrinks = 0
     const argsTreeCopy: ApplyTree<TArgs> = argsTree
@@ -408,17 +454,22 @@ function tryShrinkSingle<TArgs extends unknown[]>(
         .map(t => t.prune()) as ApplyTree<TArgs>
 
     for (const c of argsTree[i].children) {
-        ++localShrinks
+        if (localShrinks >= maxShrinks) {
+            break
+        }
+
         argsTreeCopy[i] = c
         const testResult = check(
             prop,
             ...(argsTreeCopy.map(t => t.value) as TArgs),
         )
+        ++localShrinks
         if (!testResult.ok) {
             const { shrinks, smallestFailingArgs } = tryShrinkSingle(
                 prop,
                 argsTreeCopy,
                 i,
+                maxShrinks - localShrinks,
             )
             if (smallestFailingArgs !== undefined) {
                 return {
