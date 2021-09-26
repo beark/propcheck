@@ -1,0 +1,54 @@
+{
+  "name": "@propcheck/core",
+  "entries": [
+    {
+      "version": "0.11.0",
+      "tag": "@propcheck/core_v0.11.0",
+      "date": "Sun, 19 Sep 2021 14:18:53 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Relax constraint on returned shrinks to `Iterable<T>` instead of `Seq<T>`."
+          },
+          {
+            "comment": "Implement optional, nullable, and optionalNullable using frequency_ instead of Gen.sequence, to avoid too predictable and non-exhaustive sequences. Especially in multi-parameter properties."
+          }
+        ],
+        "patch": [
+          {
+            "comment": "Make `Tree.from` more lazy in its evaluation of tree-like iterables."
+          },
+          {
+            "comment": "Add breadth first iteration of trees."
+          },
+          {
+            "comment": "Update TypeScript version to 4.4.3."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.10.0",
+      "tag": "@propcheck/jest_v0.10.0",
+      "date": "Sun, 05 Sep 2021 00:03:27 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Improved input validation and added `asciiBiasedUnicode` generator."
+          },
+          {
+            "comment": "Added `propertyNameOf` generator."
+          },
+          {
+            "comment": "Allow any truthy value, and `undefined`, to indicate that a property held, and all falsy values (except `undefined`) to indicate that it was falsified."
+          }
+        ],
+        "patch": [
+          {
+            "comment": "Update dependencies, set supported node version range."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@propcheck/jest",
+  "entries": [
+    {
+      "version": "0.10.1",
+      "tag": "@propcheck/jest_v0.10.1",
+      "date": "Sun, 19 Sep 2021 14:18:53 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update TypeScript version to 4.4.3."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.10.0",
+      "tag": "@propcheck/jest_v0.10.0",
+      "date": "Sun, 05 Sep 2021 00:03:27 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add `given` convenience funciton to define a test in one line."
+          }
+        ],
+        "patch": [
+          {
+            "comment": "Update dependencies, set supported node version range."
+          }
+        ]
+      }
+    }
+  ]
+}
