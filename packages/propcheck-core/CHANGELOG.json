@@ -2,6 +2,18 @@
   "name": "@propcheck/core",
   "entries": [
     {
+      "version": "0.12.0",
+      "tag": "@propcheck/core_v0.12.0",
+      "date": "Mon, 27 Sep 2021 10:54:21 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Ensure shrinks do not recurse infinitely by introducing options to limit the number of shrinks to try."
+          }
+        ]
+      }
+    },
+    {
       "version": "0.11.0",
       "tag": "@propcheck/core_v0.11.0",
       "date": "Sun, 19 Sep 2021 14:18:53 GMT",

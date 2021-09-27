@@ -1,6 +1,6 @@
 {
     "name": "@propcheck/jest",
-    "version": "0.10.1",
+    "version": "0.10.2",
     "description": "Jest integration/plugin for propcheck",
     "license": "MIT",
     "main": "index.js",
@@ -63,7 +63,7 @@
         ]
     },
     "dependencies": {
-        "@propcheck/core": "^0.11.0",
+        "@propcheck/core": "^0.12.0",
         "tslib": "^2.3.0"
     },
     "peerDependencies": {
