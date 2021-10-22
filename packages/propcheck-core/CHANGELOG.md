@@ -1,6 +1,13 @@
 # Change Log - @propcheck/core
 
-This log was last generated on Mon, 27 Sep 2021 10:54:21 GMT and should not be manually modified.
+This log was last generated on Fri, 22 Oct 2021 18:57:21 GMT and should not be manually modified.
+
+## 0.12.1
+Fri, 22 Oct 2021 18:57:21 GMT
+
+### Patches
+
+- Fix missing declaration file.
 
 ## 0.12.0
 Mon, 27 Sep 2021 10:54:21 GMT

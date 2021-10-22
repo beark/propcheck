@@ -63,7 +63,7 @@
         ]
     },
     "dependencies": {
-        "@propcheck/core": "^0.12.0",
+        "@propcheck/core": "^0.12.1",
         "tslib": "^2.3.0"
     },
     "peerDependencies": {
