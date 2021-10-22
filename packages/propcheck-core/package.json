@@ -22,7 +22,8 @@
         "shrink.d.ts",
         "shrink.js",
         "Tree.d.ts",
-        "Tree.js"
+        "Tree.js",
+        "type-utils.d.ts"
     ],
     "engines": {
         "node": ">=12.17.0 <17"
