@@ -236,12 +236,19 @@ describe("Gen", () => {
     describe("functor laws", () => {
         it("map(id) === id", () => {
             const gen = G.integral(new Range(0, 10, 0))
+            const mappedGen = gen.map(id)
 
             for (const seed of seeds) {
-                expect(gen.map(id).run(0, seed, 0)).toEqual(gen.run(0, seed, 0))
+                const result = gen.run(0, seed, 0)
+                const mappedResult = mappedGen.run(0, seed, 0)
+
+                expect([...mappedResult]).toEqual([...result])
+                expect([...mappedResult.breadthFirst()]).toEqual([
+                    ...result.breadthFirst(),
+                ])
             }
 
-            expect.assertions(seeds.length)
+            expect.assertions(2 * seeds.length)
         })
 
         it("map(f * g) === map(f) * map(g)", () => {

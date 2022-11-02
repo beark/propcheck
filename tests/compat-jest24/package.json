@@ -28,10 +28,9 @@
       "jest-standard-reporter"
     ]
   },
-  "dependencies": {},
   "devDependencies": {
-    "@propcheck/core": "0.12.1",
-    "@propcheck/jest": "0.10.2",
+    "@propcheck/core": "workspace:*",
+    "@propcheck/jest": "workspace:*",
     "@types/jest": "24.0.20",
     "jest": "24.1.0",
     "ts-jest": "24.1.0",

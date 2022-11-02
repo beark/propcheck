@@ -9,8 +9,7 @@ describe("Tree", () => {
         it("should correctly construct the singleton tree", () => {
             const sing = Tree.from([0, []])
 
-            expect(sing).toEqual(Tree.singleton(0))
-            expect([...sing]).toEqual([...Tree.singleton(0)])
+            expect([...sing]).toEqual([0])
         })
 
         it("[sanity] should correctly construct some example trees", () => {
@@ -26,9 +25,13 @@ describe("Tree", () => {
                 ],
             ])
 
-            expect(t0).toEqual(tree0)
-            expect(t1).toEqual(tree1)
-            expect(t2).toEqual(unfoldedTree)
+            expect([...t0]).toEqual([...tree0])
+            expect([...t0.breadthFirst()]).toEqual([...tree0.breadthFirst()])
+            expect([...t1]).toEqual([...tree1])
+            expect([...t1.breadthFirst()]).toEqual([...tree1.breadthFirst()])
+            expect([...t2.breadthFirst()]).toEqual([
+                ...unfoldedTree.breadthFirst(),
+            ])
         })
 
         it("should work with exotic iterables, not just arrays", () => {
@@ -69,23 +72,43 @@ describe("Tree", () => {
     })
 
     it("map(id) === id", () => {
-        expect(tree0.map(id)).toEqual(tree0)
-        expect(tree1.map(id)).toEqual(tree1)
+        const t0 = tree0.map(id)
+        const t1 = tree1.map(id)
+
+        expect([...t0]).toEqual([...tree0])
+        expect([...t0.breadthFirst()]).toEqual([...tree0.breadthFirst()])
+        expect([...t1]).toEqual([...tree1])
+        expect([...t1.breadthFirst()]).toEqual([...tree1.breadthFirst()])
     })
 
     it("map changes all the values", () => {
-        expect(tree0.map(x => x + 1)).toEqual(tree1)
-        expect(tree1.map(x => x - 1)).toEqual(tree0)
+        const t0 = tree0.map(x => x + 1)
+        const t1 = tree1.map(x => x - 1)
+
+        expect([...t0]).toEqual([...tree1])
+        expect([...t0.breadthFirst()]).toEqual([...tree1.breadthFirst()])
+        expect([...t1]).toEqual([...tree0])
+        expect([...t1.breadthFirst()]).toEqual([...tree0.breadthFirst()])
     })
 
     it("concatMap(singleton) === id", () => {
-        expect(tree0.concatMap(singleton)).toEqual(tree0)
-        expect(tree1.concatMap(singleton)).toEqual(tree1)
+        const t0 = tree0.concatMap(singleton)
+        const t1 = tree1.concatMap(singleton)
+
+        expect([...t0]).toEqual([...tree0])
+        expect([...t0.breadthFirst()]).toEqual([...tree0.breadthFirst()])
+        expect([...t1]).toEqual([...tree1])
+        expect([...t1.breadthFirst()]).toEqual([...tree1.breadthFirst()])
     })
 
     it("concatMap maps over all values", () => {
-        expect(tree0.concatMap(x => singleton(x + 1))).toEqual(tree1)
-        expect(tree1.concatMap(x => singleton(x - 1))).toEqual(tree0)
+        const t0 = tree0.concatMap(x => singleton(x + 1))
+        const t1 = tree1.concatMap(x => singleton(x - 1))
+
+        expect([...t0]).toEqual([...tree1])
+        expect([...t0.breadthFirst()]).toEqual([...tree1.breadthFirst()])
+        expect([...t1]).toEqual([...tree0])
+        expect([...t1.breadthFirst()]).toEqual([...tree0.breadthFirst()])
     })
 
     it("prune removes all children", () => {
@@ -104,11 +127,13 @@ describe("Tree", () => {
 
     describe("expand", () => {
         it("should pass a simple sanity check", () => {
-            expect(
-                tree1.expand(x =>
-                    2 * x + 1 > 7 ? Seq.empty() : new Seq([2 * x, 2 * x + 1]),
-                ),
-            ).toEqual(unfoldedTree)
+            const expanded = tree1.expand(x =>
+                2 * x + 1 > 7 ? Seq.empty() : new Seq([2 * x, 2 * x + 1]),
+            )
+            expect([...expanded]).toEqual([...unfoldedTree])
+            expect([...expanded.breadthFirst()]).toEqual([
+                ...unfoldedTree.breadthFirst(),
+            ])
         })
     })
 
