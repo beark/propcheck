@@ -28,8 +28,8 @@
         ]
     },
     "devDependencies": {
-        "@propcheck/core": "workspace:*",
-        "@propcheck/jest": "workspace:*",
+        "@propcheck/core": "0.12.1",
+        "@propcheck/jest": "0.10.2",
         "@types/jest": "26.0.14",
         "jest": "26.6.3",
         "ts-jest": "26.5.4",
