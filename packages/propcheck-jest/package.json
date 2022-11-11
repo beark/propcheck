@@ -37,7 +37,7 @@
         "build": "tsc -p tsconfig.build.json",
         "clean": "git clean -fx -- *.js *.d.ts *.d.ts.map *.log && rm -rf coverage/",
         "lint": "eslint \"./src/**/*\"",
-        "test": "jest"
+        "test": "node ../../common/scripts/runForNodeGeq 14.0.0 jest"
     },
     "jest": {
         "preset": "ts-jest",

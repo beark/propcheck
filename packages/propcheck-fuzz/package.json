@@ -1,0 +1,63 @@
+{
+  "name": "@propcheck/fuzz",
+  "version": "0.9.0",
+  "description": "A set of generators to do something like fuzz testing with propcheck.",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "./"
+  ],
+  "keywords": [
+    "functional",
+    "jest",
+    "propcheck",
+    "property-based testing",
+    "quickcheck",
+    "test",
+    "testing",
+    "typescript",
+    "strings",
+    "fuzz"
+  ],
+  "author": "Björn Aili <4073478+beark@users.noreply.github.com> (https://github.com/beark)",
+  "repository": "github:beark/propcheck",
+  "homepage": "https://github.com/beark/propcheck",
+  "bugs": "https://github.com/beark/propcheck/issues",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "jest",
+    "lint": "eslint \"./src/*\""
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "watchPathIgnorePatterns": [
+      "<rootDir>/node_modules/"
+    ],
+    "globals": {
+      "ts-jest": {
+        "packageJson": "package.json",
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "reporters": [
+      "jest-standard-reporter"
+    ]
+  },
+  "dependencies": {
+    "@propcheck/core": "^0.9.0",
+    "tslib": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/node": "12.12.2",
+    "@typescript-eslint/eslint-plugin": "2.21.0",
+    "@typescript-eslint/parser": "2.21.0",
+    "eslint": "^6.8.0",
+    "jest": "25.1.0",
+    "jest-standard-reporter": "^1.0.4",
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
+  }
+}
