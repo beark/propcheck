@@ -4,9 +4,8 @@ import { elementOf_ } from "./choice"
 /**
  * Object generator type.
  *
+ * @remarks
  * Each property is a generator for the corresponding property in `T`.
- *
- * @template T
  */
 export type ObjectGenerator<T> = { [K in keyof T]: Gen<T[K]> }
 
@@ -14,18 +13,20 @@ export type ObjectGenerator<T> = { [K in keyof T]: Gen<T[K]> }
  * Given an object where each property is a generator, returns a generator that
  * will produce an object out of those.
  *
+ * @remarks
  * - Each sub-generator will vary with size as per their own definition.
  * - No shrink tree.
  *
- * @nosideeffects
- * @param {ObjectGenerator<T>} gen
- *   Effectively a set of key/generator pairs, where each will be used to
- *   compose a generator of objects of the desired type.
- * @returns {Gen<T>}
- * @template T
  * @example
+ *
+ * ```ts
  * // g: Gen<{ a: string, b: number }>
- * const g = obj_({ a: alphaChar, b: nat });
+ * const g = obj_({ a: alphaChar, * b: nat });
+ * ```
+ *
+ * @param gen - Effectively a set of key/generator pairs, where each will be
+ *   used to compose a generator of objects of the desired type.
+ * @nosideeffects
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function obj_<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
@@ -55,18 +56,20 @@ export function obj_<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
  * Given an object where each property is a generator, returns a generator that
  * will produce an object out of those.
  *
+ * @remarks
  * - Each sub-generator will vary with size as per their own definition.
  * - Each sub-generator will shrink as per their own definition.
  *
- * @nosideeffects
- * @param {ObjectGenerator<T>} gen
- *   Effectively a set of key/generator pairs, where each will be used to
- *   compose a generator objects of the desired type.
- * @returns {Gen<T>}
- * @template T
  * @example
+ *
+ * ```ts
  * // g: Gen<{ a: string, b: number }>
- * const g = obj({ a: alphaChar, b: nat });
+ * const g = obj({ a: alphaChar, b: nat })
+ * ```
+ *
+ * @param gen - Effectively a set of key/generator pairs, where each will be
+ *   used to compose a generator objects of the desired type.
+ * @nosideeffects
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function obj<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
@@ -93,9 +96,10 @@ export function obj<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
 /**
  * Given an object, yields a generator of that object's own properties.
  *
+ * @remarks
  * Includes both string and symbol properties.
  *
- * Note that due to quirks of the TS type system, this has to return a
+ * Note that due to quirks of the TS type system, this function has to return a
  * `string | symbol` generator, not a `keyof` since that would be an absolute
  * lie for many types. For example, `keyof number[]` includes a lot of methods
  * like `pop`, `push`, `concat`, `indexOf`, ..., while none of `Object.keys`,
@@ -104,15 +108,19 @@ export function obj<T extends {}>(gen: ObjectGenerator<T>): Gen<T> {
  * - Size invariant.
  * - No shrink tree.
  *
- * @nosideeffects
- * @param {unknown} o Object the keys of which will be generated.
- * @returns {Gen<string | symbol>}
  * @example
- * // arrNames will generate one of "0", "1", "2", "length"
- * const arrNames = propertyNameOf(["a", "b", "c"]);
  *
- * // In effect, equivalent of Gen.const("foo")
- * const objNames = propertyNameOf({ foo: null });
+ * ```ts
+ * // arrNames will generate one of "0", "1", "2", "length"
+ * const arrNames = propertyNameOf(["a", "b", "c"])
+ *
+ * // In effect, equivalent of Gen.const("foo") const objNames =
+ * propertyNameOf({ foo: null })
+ * ```
+ *
+ * @param o - Object the keys of which will be generated.
+ *
+ * @nosideeffects
  */
 export function propertyNameOf(o: unknown): Gen<string | symbol> {
     const propKeys: (string | symbol)[] = Object.getOwnPropertyNames(o)

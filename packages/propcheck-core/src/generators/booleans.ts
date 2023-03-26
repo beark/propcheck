@@ -4,6 +4,7 @@ import { nextInt } from "../prng"
 /**
  * Generate a boolean value.
  *
+ * @remarks
  * - Size invariant.
  * - No shrink tree.
  */

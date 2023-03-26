@@ -2,6 +2,11 @@
  * Simple inclusive range of numbers.
  */
 export class Range {
+    /**
+     * @throws `TypeError` if `minBound` `origin`, or `maxBound` are not
+     *   numbers.
+     * @throws `RangeError` if `maxBound` is smaller than `minBound`.
+     */
     constructor(
         /**
          * Inclusive start of the range.
@@ -14,6 +19,7 @@ export class Range {
         /**
          * The origin of the range.
          *
+         * @remarks
          * Typically, this number is used as a kind of "goal" when generating
          * shrink trees for a generator.
          */

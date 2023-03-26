@@ -3,7 +3,7 @@ module.exports = {
     parserOptions: {
         sourceType: "module",
     },
-    plugins: ["@typescript-eslint"],
+    plugins: ["@typescript-eslint", "eslint-plugin-tsdoc"],
     rules: {
         "@typescript-eslint/adjacent-overload-signatures": "error",
         "@typescript-eslint/array-type": "error",
@@ -60,6 +60,7 @@ module.exports = {
         "quote-props": "off",
         radix: "error",
         "space-before-function-paren": "off",
+        "tsdoc/syntax": "error",
         "use-isnan": "error",
         "valid-typeof": "error",
     },

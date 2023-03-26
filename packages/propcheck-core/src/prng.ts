@@ -1,6 +1,7 @@
 /**
  * State used for seeding the PRNG used by propcheck.
  *
+ * @remarks
  * If constructed manually, each component of the state should be an integral
  * number.
  */
@@ -9,13 +10,14 @@ export type SeedState = [number, number, number, number]
 /**
  * Create a {@link SeedState} from some input "key".
  *
+ * @remarks
  * Providing the same key will always result in the same sequence of pseudo-
  * random values being generated.
+ * @param key - Some string of characters that will be used as basis of the
+ *   seed.
+ * @throws `never`
  *
  * @nosideeffects
- * @param {string} key
- *   Some string of characters that will be used as basis of the seed.
- * @returns {SeedState}
  */
 export function makeSeedState(key: string): SeedState {
     let h0 = 2166136261
@@ -36,12 +38,16 @@ export function makeSeedState(key: string): SeedState {
  * Split a seed state into two states that will not generate overlapping output
  * (within reason).
  *
+ * @remarks
  * Note that every PRNG has a cycle, so if only one of the outputted seed states
  * is iterated, it will _eventually_ overlap with the other.
+ * @param state - Input seed state.
+ *
+ * @returns Two new independent seed states.
+ *
+ * @throws `never`
  *
  * @nosideeffects
- * @param {SeedState} state Input seed state.
- * @returns {[SeedState, SeedState]} Two new independent seed states.
  */
 export function split(state: SeedState): [SeedState, SeedState] {
     return [step(state), jump(state)]
@@ -50,9 +56,11 @@ export function split(state: SeedState): [SeedState, SeedState] {
 /**
  * Steps the state once without producing a pseudo random number.
  *
- * @nosideefects
- * @param {SeedState} state Input seed state.
- * @returns {SeedState}
+ * @param state - Input seed state.
+ *
+ * @throws `never`
+ *
+ * @nosideeffects
  */
 export function step(state: SeedState): SeedState {
     return xoshiro128ss(state)[0]
@@ -66,12 +74,12 @@ const defaultNumRange = {
 /**
  * Generate a number from the input seed state.
  *
+ * @param state - Input seed.
+ * @param range - Optional inclusive range to generate within. If not provided,
+ *   the number will be within the range 0..1.
+ * @throws `never`
+ *
  * @nosideeffects
- * @param {SeedState} state Input seed.
- * @param {{ minBound: number, maxBound: number } | undefined} range
- *   Optional inclusive range to generate within. If not provided, the number
- *   will be within the range 0..1.
- * @returns {number}
  */
 export function nextNum(
     state: SeedState,
@@ -92,12 +100,12 @@ const defaultIntRange = {
 /**
  * Generate an integer-truncated number from the input seed state.
  *
+ * @param state - Input seed.
+ * @param range - Optional inclusive range to generate within. If not provided,
+ *   the number will be within the full range of safe ints, as defined in JS.
+ * @throws `never`
+ *
  * @nosideeffects
- * @param {SeedState} state Input seed.
- * @param {{ minBound: number, maxBound: number } | undefined} range
- *   Optional inclusive range to generate within. If not provided, the number
- *   will be within the full range of safe ints, as defined in JS.
- * @returns {number}
  */
 export function nextInt(
     state: SeedState,

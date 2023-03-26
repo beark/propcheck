@@ -5,15 +5,17 @@ import type { Gen } from "../Gen"
 /**
  * Generator of resolving promises.
  *
+ * @remarks
  * Will always generate promises that resolve.
  *
  * - The given value generator determines growth properties.
  * - The given value generator determines shrink tree.
  *
+ * @typeParam TVal - Type of values the generated promises will resolve to.
+ *
+ * @param valueGen - Generator used to generate the value the promise resolves
+ *   to.
  * @nosideeffects
- * @param {Gen<TVal>} valueGen
- *   Generator used to generate the value the promise resolves to.
- * @template TVal Type of values the generated promises will resolve to.
  */
 export const resolvingPromise = <TVal>(
     valueGen: Gen<TVal>,
@@ -22,15 +24,17 @@ export const resolvingPromise = <TVal>(
 /**
  * Generator of rejecting promises.
  *
+ * @remarks
  * Will always generate promises that reject.
  *
  * - The given error/reason generator determines growth properties.
  * - The given errorr/reason generator determines shrink tree.
  *
+ * @typeParam TErr - Type of rejected errors to generate promises of.
+ *
+ * @param errorGen - Generator used to generate the reason/error of the rejected
+ *   promise.
  * @nosideeffects
- * @param {Gen<TErr>} errorGen
- *   Generator used to generate the reason/error of the rejected promise.
- * @template TErr Type of rejected errors to generate promises of.
  */
 export const rejectingPromise = <TErr>(
     errorGen: Gen<TErr>,
@@ -39,19 +43,19 @@ export const rejectingPromise = <TErr>(
 /**
  * Generic promise generator.
  *
+ * @remarks
  * Will generate resolving promises about 2/3 times, and rejecting promises 1/3
  * of the time.
  *
  * - Picked generator determines growth properties.
  * - Picked generator determines shrink tree.
  *
+ * @typeParam TVal - Type of resolved values to generate promises of.
+ * @typeParam TErr - Type of rejected errors to generate promises of.
+ *
+ * @param valueGen - Generator used to generate values for resoling promises.
+ * @param errorGen - Generator used to generate errors for rejecting promises.
  * @nosideeffects
- * @param {Gen<TVal>} valueGen
- *   Generator used to generate values for resoling promises.
- * @param {Gen<TErr>} errorGen
- *   Generator used to generate errors for rejecting promises.
- * @template TVal Type of resolved values to generate promises of.
- * @template TErr Type of rejected errors to generate promises of.
  */
 export const promise = <TVal, TErr>(
     valueGen: Gen<TVal>,

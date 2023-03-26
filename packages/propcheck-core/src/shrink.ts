@@ -3,13 +3,16 @@ import { Seq } from "lazy-sequences"
 /**
  * Generate a shrink sequence towards some given integral number.
  *
- * @nosideeffects
- * @param {number} destination Integral value to shrink towards.
- * @param {number} x Value to start shrinking from.
- * @returns {Seq<number>}
  * @example
- * towardsIntegral(0, 10).collect()
- *   === [0, 5, 8, 9]
+ *
+ * ```ts
+ * towardsIntegral(0, 10).collect() === [0, 5, 8, 9]
+ * ```
+ *
+ * @param destination - Integral value to shrink towards.
+ * @param x - Value to start shrinking from.
+ *
+ * @nosideeffects
  */
 export function towardsIntegral(destination: number, x: number): Seq<number> {
     if (destination === x) {
@@ -27,15 +30,18 @@ export function towardsIntegral(destination: number, x: number): Seq<number> {
 /**
  * Generate a shrink sequence by edging towards some given number.
  *
- * @nosideeffects
- * @param {number} destination Value to edge towards.
- * @param {number} x Value to start shrinking from.
- * @param {number=} iterationLimit
- *   Optional limit on how many shrink iterations to generate. Defaults to 7.
- * @returns {Seq<number>}
  * @example
- * towardsNum(0, 100).collect()
- *   === [0, 50, 75, 87.5, 93.75, 96.875, 98.4375]
+ *
+ * ```ts
+ * towardsNum(0, 100).collect() ===
+ *     [0, 50, 75, 87.5, 93.75, 96.875, 98.4375]
+ * ```
+ *
+ * @param destination - Value to edge towards.
+ * @param x - Value to start shrinking from.
+ * @param iterationLimit - Optional limit on how many shrink iterations to
+ *   generate. Defaults to 7.
+ * @nosideeffects
  */
 export function towardsNum(
     destination: number,

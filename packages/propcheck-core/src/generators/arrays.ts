@@ -5,12 +5,13 @@ import { integral, integral_, nat } from "./numbers"
 /**
  * Generate an array by repeatedly running the given generator.
  *
+ * @remarks
  * - Length of array grows linearly with size, elements grow as per `g`.
  * - Shrinks length toward 0.
  *
+ * @param g - Element generator.
+ *
  * @nosideeffects
- * @param {Gen<T>} g Element generator.
- * @returns {Gen<T[]>}
  */
 export function arrayOf<T>(g: Gen<T>): Gen<T[]> {
     return nat.andThen(n => g.repeat(n))
@@ -19,14 +20,14 @@ export function arrayOf<T>(g: Gen<T>): Gen<T[]> {
 /**
  * Generate an array with length uniformly picked in the given range.
  *
+ * @remarks
  * - Elements grow as per `g`.
  * - No shrink tree.
  *
+ * @param g - Element generator.
+ * @param r - Integral range deciding which lengths are valid for the generated
+ *   array.
  * @nosideeffects
- * @param {Gen<T>} g Element generator.
- * @param {Range} r
- *   Integral range deciding which lengths are valid for the generated array.
- * @template T
  */
 export function array_<T>(g: Gen<T>, r: Range): Gen<T[]> {
     if (!Number.isInteger(r.minBound) || r.minBound < 0) {
@@ -47,14 +48,18 @@ export function array_<T>(g: Gen<T>, r: Range): Gen<T[]> {
 /**
  * Generate an array with length uniformly picked in the given range.
  *
+ * @remarks
  * - Elements grow as per `g`.
  * - Shrinks length toward the origin of `r`.
  *
+ * @param g - Element generator.
+ * @param r - Integral range deciding which lengths are valid for the generated
+ *   array.
+ * @throws `RangeError` if `r.minBound` is not an integer `>= 0`.
+ * @throws `RangeError` if `r.maxBound` is not an integer `> r.minBound`.
+ * @throws `RangeError` if `r.origin` is not an integer.
+ *
  * @nosideeffects
- * @param {Gen<T>} g Element generator.
- * @param {Range} r
- *   Integral range deciding which lengths are valid for the generated array.
- * @template T
  */
 export function array<T>(g: Gen<T>, r: Range): Gen<T[]> {
     if (!Number.isInteger(r.minBound) || r.minBound < 0) {
@@ -81,15 +86,22 @@ export function array<T>(g: Gen<T>, r: Range): Gen<T[]> {
 /**
  * Generate a fixed length array of heterogenous types (aka a tuple).
  *
+ * @remarks
  * - Elements grow as per their generator.
  * - Elements shrink as per their generator.
  *
- * @nosideeffects
- * @param {Gen<any>[]} gs A tuple of generators.
- * @returns {Gen<any[]>} A generator of tuples.
  * @example
+ *
+ * ```ts
  * // tupleGen: Gen<[number, boolean]>;
- * const tupleGen = tuple(nat, bool);
+ * const tupleGen = tuple(nat, bool)
+ * ```
+ *
+ * @param gs - A tuple of generators.
+ *
+ * @returns A generator of tuples.
+ *
+ * @nosideeffects
  */
 export function tuple<T extends Gen<unknown>[]>(
     ...gs: T

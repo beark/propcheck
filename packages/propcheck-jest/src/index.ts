@@ -6,7 +6,7 @@ import {
     shrink,
 } from "@propcheck/core/runner"
 
-import { SeedState } from "@propcheck/core/prng"
+import type { SeedState } from "@propcheck/core/prng"
 
 export type GeneratedTypes<T> = {
     [K in keyof T]: GeneratedType<T[K]>
@@ -20,6 +20,7 @@ export type GivenOptions = {
     /**
      * Gives a name to the operation under test.
      *
+     * @remarks
      * Any name provided by the `operation` combinator will be overriden by
      * this. If not provided by either method, no `describe` containing an
      * operation name will be generated.
@@ -28,9 +29,10 @@ export type GivenOptions = {
     /**
      * Gives a name to the property under test.
      *
+     * @remarks
      * If not provided, the name of the property is assumed to be the name of
-     * the function given as property. If an anonymous function is given,
-     * the test will have no property name.
+     * the function given as property. If an anonymous function is given, the
+     * test will have no property name.
      */
     property?: string
 } & Partial<PropCheckOpts>
@@ -39,19 +41,18 @@ export type Given<TArgs extends unknown[]> = {
     /**
      * Defines the property to be under test.
      *
-     * @param prop
-     *   Function that defines the property under test. Should either throw, or
-     *   return something defined but falsy on failure.
+     * @param prop - Function that defines the property under test. Should
+     *   either throw, or return something defined but falsy on failure.
      */
     shouldSatisfy: (prop: (...args: TArgs) => unknown) => void
     /**
      * Defines the property to be under test.
      *
+     * @remarks
      * Further, _focuses_ on this particular property test (like Jest's `fit`).
      *
-     * @param prop
-     *   Function that defines the property under test. Should either throw, or
-     *   return something defined but falsy on failure.
+     * @param prop - Function that defines the property under test. Should
+     *   either throw, or return something defined but falsy on failure.
      */
     fshouldSatisfy: (prop: (...args: TArgs) => unknown) => void
     /**
@@ -63,38 +64,37 @@ export type Given<TArgs extends unknown[]> = {
     /**
      * Give a name to the general operation for which the property test applies.
      *
-     * @param {string} name The name of the operation.
-     *
      * @example
-     * given(nat, nat, nat)
-     *   .operation("plus")
-     *   .shouldSatisfy(assoc);
+     *
+     * ```ts
+     * given(nat, nat, nat).operation("plus").shouldSatisfy(assoc)
      *
      * // Equivalent test without the short-hands:
      * describe("plus", () => {
-     *   it("should satisfy the property 'assoc'", () => {
-     *     expect(assoc).forall(nat, nat, nat);
-     *   });
-     * });
+     *     it("should satisfy the property 'assoc'", () => {
+     *         expect(assoc).forall(nat, nat, nat)
+     *     })
+     * })
+     * ```
+     *
+     * @param name - The name of the operation.
      */
     operation: (name: string) => {
         /**
          * Defines the property to be under test.
          *
-         * @param prop
-         *   Function that defines the property under test. Should either throw,
-         *   or return something defined but falsy on failure.
+         * @param prop - Function that defines the property under test. Should
+         *   either throw, or return something defined but falsy on failure.
          */
         shouldSatisfy: (prop: (...args: TArgs) => unknown) => void
         /**
          * Defines the property to be under test.
          *
+         * @remarks
          * Further, _focuses_ on this particular property test (like Jest's
          * `fit`).
-         *
-         * @param prop
-         *   Function that defines the property under test. Should either throw,
-         *   or return something defined but falsy on failure.
+         * @param prop - Function that defines the property under test. Should
+         *   either throw, or return something defined but falsy on failure.
          */
         fshouldSatisfy: (prop: (...args: TArgs) => unknown) => void
     }
@@ -103,13 +103,16 @@ export type Given<TArgs extends unknown[]> = {
 /**
  * Short-hand function to define a property test.
  *
- * @param {TArgs} gens
- *   Generators that will be used as input sources for the property under test.
- * @returns
- * @template TArgs Type of generator arguments.
- *
  * @example
- * given(nat).operation("plus one").shouldSatisfy(positive);
+ *
+ * ```ts
+ * given(nat).operation("plus one").shouldSatisfy(positive)
+ * ```
+ *
+ * @typeParam TArgs - Type of generator arguments.
+ *
+ * @param gens - Generators that will be used as input sources for the property
+ *   under test.
  */
 export function given<TArgs extends Gen<unknown>[]>(
     ...gens: TArgs
@@ -213,9 +216,11 @@ declare global {
              * Do a full property check run on the given property with default
              * options.
              *
+             * @remarks
              * To deterministically repeat a past run without changing your test
              * code, you can provide any `propcheck` options as environment
              * variables:
+             *
              * - PROPCHECK_SEED -- The seed to begin the run with.
              * - PROPCHECK_STARTITER -- The iteration count to start on.
              * - PROPCHECK_ITERCOUNT -- The number of test iterations to run
@@ -225,15 +230,18 @@ declare global {
              *   purposes of value generation.
              *
              * @example
-             * describe("The sum of two naturals", () => {
-             *   it("should always be zero or more", () => {
-             *     const sumIsGEqZero = (a: number, b: number) => {
-             *       expect(a + b).toBeGreaterThanOrEqual(0);
-             *     };
              *
-             *     expect(sumIsGEqZero).forall(nat, nat);
-             *   })
+             * ```ts
+             * describe("The sum of two naturals", () => {
+             *     it("should always be zero or more", () => {
+             *         const sumIsGEqZero = (a: number, b: number) => {
+             *             expect(a + b).toBeGreaterThanOrEqual(0)
+             *         }
+             *
+             *         expect(sumIsGEqZero).forall(nat, nat)
+             *     })
              * })
+             * ```
              */
             forall: Forall<R, T>
 
@@ -241,9 +249,11 @@ declare global {
              * Do a full property check run on the given property with the given
              * options.
              *
+             * @remarks
              * To deterministically repeat a past run without changing your test
              * code, you can provide any `propcheck` options as environment
              * variables:
+             *
              * - PROPCHECK_SEED -- The seed to begin the run with.
              * - PROPCHECK_STARTITER -- The iteration count to start on.
              * - PROPCHECK_ITERCOUNT -- The number of test iterations to run
@@ -253,19 +263,22 @@ declare global {
              *   purposes of value generation.
              *
              * @example
-             * describe("The sum of two naturals", () => {
-             *   it("should always be zero or more", () => {
-             *     const sumIsGEqZero = (a: number, b: number) => {
-             *       expect(a + b).toBeGreaterThanOrEqual(0);
-             *     };
              *
-             *     expect(sumIsGEqZero).forallWithOptions(
-             *       { seed: 'customSeed' },
-             *       nat,
-             *       nat
-             *     );
-             *   })
+             * ```ts
+             * describe("The sum of two naturals", () => {
+             *     it("should always be zero or more", () => {
+             *         const sumIsGEqZero = (a: number, b: number) => {
+             *             expect(a + b).toBeGreaterThanOrEqual(0)
+             *         }
+             *
+             *         expect(sumIsGEqZero).forallWithOptions(
+             *             { seed: "customSeed" },
+             *             nat,
+             *             nat,
+             *         )
+             *     })
              * })
+             * ```
              */
             forallWithOptions: ForallWithOptions<R, T>
         }

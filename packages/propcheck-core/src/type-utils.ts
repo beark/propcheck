@@ -2,13 +2,16 @@
  * Maps any tuple type to a union of its element types.
  *
  * @example
- * type Tup = [number, string, boolean];
- * type Union = TupleToUnion<Tup>;
+ *
+ * ```ts
+ * type Tup = [number, string, boolean]
+ * type Union = TupleToUnion<Tup>
  *
  * // Equivalent to
- * type Union = number | string | boolean;
+ * type Union = number | string | boolean
+ * ```
  *
- * @template T The tuple type.
- * @template U Optional type to union the result with.
+ * @typeParam T - The tuple type.
+ * @typeParam U - Optional type to union the result with.
  */
 export type TupleToUnion<T extends unknown[], U = never> = T[number] | U

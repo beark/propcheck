@@ -3,6 +3,7 @@ import type Gen from "../Gen"
 /**
  * Generator of arbitrary functions.
  *
+ * @remarks
  * There is no computational connection between the arguments given to a
  * generated function and its result; the results are entirely based on the
  * given generator.
@@ -22,15 +23,13 @@ import type Gen from "../Gen"
  * - Size of function results varies as per the given generator.
  * - No shrink tree.
  *
+ * @typeParam TReturn - The type of the generated functions' codomain (the type
+ *   they return).
+ * @param retGen - Return value generator.
+ * @param domainSize - The number of possible unique input combinations. A new
+ *   result value is generated for every new input combination until this amount
+ *   has been generated, whereafter the return values loop around.
  * @nosideeffects
- * @param {Gen<TReturn>} retGen Return value generator.
- * @param {number} domainSize
- *   The number of possible unique input combinations. A new result value is
- *   generated for every new input combination until this amount has been
- *   generated, whereafter the return values loop around.
- * @returns {Gen<(...args: any[]) => TReturn>}
- * @template TReturn
- *   The type of the generated functions' codomain (the type they return).
  */
 export const fn = <TReturn>(
     retGen: Gen<TReturn>,

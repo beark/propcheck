@@ -8,13 +8,13 @@ import type { TupleToUnion } from "../type-utils"
  * Generator that picks one of the elements in a given list with uniform
  * distribution.
  *
+ * @remarks
  * - Size invariant.
  * - No shrink tree.
  *
+ * @param options - The possible values to choose from.
+ *
  * @nosideeffects
- * @param {T[]} options The possible values to choose from.
- * @returns {Gen<T>}
- * @template T
  */
 export function elementOf_<T>(...options: T[]): Gen<T> {
     if (options.length === 0) {
@@ -30,13 +30,13 @@ export function elementOf_<T>(...options: T[]): Gen<T> {
  * Generator that picks one of the elements in a given list with uniform
  * distribution.
  *
+ * @remarks
  * - Size invariant.
  * - Shrinks towards the first element in the array.
  *
+ * @param options - The possible values to choose from.
+ *
  * @nosideeffects
- * @param {T[]} options The possible values to choose from.
- * @returns {Gen<T>}
- * @template T
  */
 export function elementOf<T>(...options: T[]): Gen<T> {
     if (options.length === 0) {
@@ -48,23 +48,21 @@ export function elementOf<T>(...options: T[]): Gen<T> {
     return integral(new Range(0, options.length - 1, 0)).map(i => options[i])
 }
 
-type UnionOfGeneratedTypes<T extends Gen<unknown>[]> = TupleToUnion<
-    { [K in keyof T]: GeneratedType<T[K]> }
->
+type UnionOfGeneratedTypes<T extends Gen<unknown>[]> = TupleToUnion<{
+    [K in keyof T]: GeneratedType<T[K]>
+}>
 
 /**
  * Picks one of the given generators with equal probability and lets it generate
  * a value.
  *
+ * @remarks
  * - Picked generator determines growth properties.
  * - Picked generator determines shrink tree.
  *
+ * @param gens - One or more generators to pick from. May be of different types,
+ *   in which case the generated values will also be of different types.
  * @nosideeffects
- * @param {Gen<T>[]} gens
- *   One or more generators to pick from. May be of different types, in which
- *   case the generated values will also be of different types.
- * @returns {Gen<T>}
- * @template T
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function oneOf_<T extends Gen<any>[]>(
@@ -83,16 +81,14 @@ export function oneOf_<T extends Gen<any>[]>(
  * Picks one of the given generators with equal probability and lets it generate
  * a value.
  *
+ * @remarks
  * - Picked generator determines growth properties.
  * - Shrinks towards the first generator in addition to how the picked generator
  *   shrinks.
  *
+ * @param gens - One or more generators to pick from. May be of different types,
+ *   in which case the generated values will also be of different types.
  * @nosideeffects
- * @param {Gen<T>[]} gens
- *   One or more generators to pick from. May be of different types, in which
- *   case the generated values will also be of different types.
- * @returns {Gen<T>}
- * @template T
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function oneOf<T extends Gen<any>[]>(
@@ -109,8 +105,6 @@ export function oneOf<T extends Gen<any>[]>(
 
 /**
  * A pair consisting of a weight and a generator.
- *
- * @template T
  */
 export type WeightedGen<T> = {
     /**
@@ -127,16 +121,17 @@ export type WeightedGen<T> = {
 /**
  * Pick among a given set of weighted generators.
  *
+ * @remarks
  * The probability of picking a particular generator is equal to its weight
  * divided by the sum of all weights.
  *
  * - Picked generator determines growth properties.
  * - Picked generator determines shrink tree.
  *
- * @nosideffects
- * @param {WeightedGen<T>[]} gens
- * @returns {Gen<T>}
- * @template T
+ * @throws `RangeError` if `gens.length === 0`.
+ * @throws `RangeError` if any of the weights are non-integral or `< 0`.
+ *
+ * @nosideeffects
  */
 export function frequency_<T>(...gens: WeightedGen<T>[]): Gen<T> {
     if (gens.length === 0) {
@@ -161,6 +156,7 @@ export function frequency_<T>(...gens: WeightedGen<T>[]): Gen<T> {
 /**
  * Pick among a given set of weighted generators.
  *
+ * @remarks
  * The probability of picking a particular generator is equal to its weight
  * divided by the sum of all weights.
  *
@@ -168,10 +164,10 @@ export function frequency_<T>(...gens: WeightedGen<T>[]): Gen<T> {
  * - Shrinks both towards the first given generator, and according to whatever
  *   generator was picked.
  *
- * @nosideffects
- * @param {WeightedGen<T>[]} gens
- * @returns {Gen<T>}
- * @template T
+ * @throws `RangeError` if `gens` doesn't have at least one element.
+ * @throws `RangeError` if any given weight is non-integral or `< 0`.
+ *
+ * @nosideeffects
  */
 export function frequency<T>(...gens: WeightedGen<T>[]): Gen<T> {
     if (gens.length === 0) {

@@ -6,6 +6,7 @@ import type { Gen, GeneratedType } from "./Gen"
 /**
  * The result of a propcheck run.
  *
+ * @remarks
  * Either a pass, or a failure.
  */
 export type PropCheckResult<T> = PropCheckPass | PropCheckFailure<T>
@@ -22,6 +23,7 @@ export type PropCheckPass = {
     /**
      * The name of the property that was tested.
      *
+     * @remarks
      * Typically, this is simply the name of the function that describes the
      * property.
      */
@@ -30,6 +32,7 @@ export type PropCheckPass = {
     /**
      * Which iteration the check ended on.
      *
+     * @remarks
      * This effectively indicates how many tests the property was put through.
      */
     iteration: number
@@ -49,6 +52,7 @@ export type PropCheckFailure<T> = {
     /**
      * The name of the property that was tested.
      *
+     * @remarks
      * Typically, this is simply the name of the function that describes the
      * property.
      */
@@ -58,6 +62,7 @@ export type PropCheckFailure<T> = {
      * The arguments found that caused the property to fail, including their
      * shrink tree.
      *
+     * @remarks
      * The very first `value` in each tree is the original argument which the
      * property was tested against.
      */
@@ -71,6 +76,7 @@ export type PropCheckFailure<T> = {
     /**
      * Which iteration the check ended on.
      *
+     * @remarks
      * This effectively indicates how many tests the property was put through.
      */
     iteration: number
@@ -83,26 +89,31 @@ export type PropCheckFailure<T> = {
     /**
      * The thrown error (if any) that caused the property to fail.
      *
+     * @remarks
      * If not defined, then the property failed by returning `false`.
      */
     error?: unknown
 }
 
 /**
- * Options that can be passed to {@link Runner.check}, for example
- * to repeat a failed run exactly, or to simply customize the run.
+ * Options that can be passed to {@link Runner.check}, for example to repeat a
+ * failed run exactly, or to simply customize the run.
  */
 export type PropCheckOpts = {
     /**
      * The number of iterations/tests to run the property through.
      *
-     * Defaults to `100`, should be an integer >= 1.
+     * @remarks
+     * Should be an integer `>= 1`.
+     *
+     * @defaultValue `100`
      */
     iterations: number
 
     /**
      * Which iteration the test run should start on.
      *
+     * @remarks
      * The primary use case for this option is to deterministically repeat a
      * specific check iteration that failed.
      *
@@ -116,31 +127,37 @@ export type PropCheckOpts = {
      * iteration, it must be possible to specify which iteration to start on to
      * get those perfectly deterministic repeat runs.
      *
-     * Defaults to `1`, should be an integer >= 1.
+     * Should be an integer `>= 1`.
+     * @defaultValue `1`
      */
     startIteration: number
 
     /**
      * Size to start the runs at.
      *
+     * @remarks
      * Each consecutive iteration will increment the size until `maxSize` is
      * reached.
      *
-     * Defaults to `3`, should be an integer >= 0.
+     * Should be an integer `>= 0`.
+     * @defaultValue `3`
      */
     startSize: number
 
     /**
      * The maximum size to run the property check with.
      *
-     * Defaults to `10_000`, should be an integer >= `startSize`.
+     * @remarks
+     * Should be an integer `>= startSize`.
+     *
+     * @defaultValue `10_000`
      */
     maxSize: number
 
     /**
      * Initial seed to start the property check with.
      *
-     * Defaults to `"default"`.
+     * @defaultValue `"default"`
      */
     seed: string | SeedState
 }
@@ -149,45 +166,52 @@ export type PropCheckOpts = {
  * A property test runner that can be applied to any property with parameters
  * matching `TParams`.
  *
- * @template TParams
- *   Tuple type of the property parameter types this runner can check.
+ * @typeParam TParams - Tuple type of the property parameter types this runner
+ *   can check.
  */
 export type Runner<TParams extends unknown[]> = {
     /**
      * Run a full set of tests of the given property.
      *
-     * @nosideeffects
-     * @param {(...args: TParams) => unknown} property The property to test.
-     * @returns {PropCheckResult<TParams>}
      * @example
-     * given(nat, nat, nat)
-     *   .check(plusAssoc);
+     *
+     * ```ts
+     * given(nat, nat, nat).check(plusAssoc)
+     * ```
+     *
+     * @param property - The property to test.
+     *
+     * @nosideeffects
      */
     check(property: (...args: TParams) => unknown): PropCheckResult<TParams>
 
     /**
      * Apply options to the runner.
      *
+     * @remarks
      * The returned object will have its configuration overriden by the given
      * options.
+     * @example
+     *
+     * ```ts
+     * given(someGenerator)
+     *     .withOptions({ iterations: 1000 })
+     *     .check(someProperty)
+     * ```
+     *
+     * @param opts - Options to configure the run with.
+     *
+     * @returns A new runner configured with the given options.
+     *
+     * @throws `RangeError` If any of the given options are nonsensical.
      *
      * @nosideeffects
-     * @param {Partial<PropCheckOpts>} opts Options to configure the run with.
-     * @throws {RangeError} If any of the given options are nonsensical.
-     * @returns {Runner<TParams>}
-     *   A new runner configured with the given options.
-     * @example
-     * given(someGenerator)
-     *   .withOptions({ iterations: 1000 })
-     *   .check(someProperty);
      */
     withOptions(opts: Partial<PropCheckOpts>): Runner<TParams>
 }
 
 /**
  * The result of shrinking a set of arguments of type `TArgs`.
- *
- * @template TArgs
  */
 export type ShrinkResult<TArgs> = {
     /**
@@ -207,17 +231,17 @@ export type ShrinkOptions = {
      * {@link shrink}. The smallest arguments found so far will still be
      * reported.
      *
-     * Defaults to `Infinity`.
+     * @defaultValue `Infinity`
      */
     maxShrinks: number
     /**
-     * Maximum shrinks to try *per argument* during a call to {@link shrink}.
+     * Maximum shrinks to try _per argument_ during a call to {@link shrink}.
      *
+     * @remarks
      * If, when trying to shrink a specific argument, this number has been
      * reached, `shrink` will give up and try to shrink the next argument. The
      * smallest argument found so far will still be reported.
-     *
-     * Defaults to `100`.
+     * @defaultValue `100`
      */
     maxShrinksPerArgument: number
 }
@@ -231,16 +255,21 @@ const defaultShrinkOpts: ShrinkOptions = {
  * Given a set of generators, produce a test runner that can be used to check a
  * matching property.
  *
- * @nosideeffects
- * @param {TGens} gens
- *   A parameter pack of generators for the parameter types of the property that
- *   is to be tested.
- * @returns {Runner<Given<TGens>>}
- * @template TGens Some tuple of generators.
  * @example
- * declare const property: (x: number) => boolean;
+ *
+ * ```ts
+ * declare const property: (x: number) => boolean
  *
  * const result = given(nat).check(property)
+ * ```
+ *
+ * @typeParam TGens - Some tuple of generators.
+ *
+ * @param gens - A parameter pack of generators for the parameter types of the
+ *   property that is to be tested.
+ * @throws `never`
+ *
+ * @nosideeffects
  */
 export function given<TGens extends Gen<unknown>[]>(
     ...gens: TGens
@@ -252,17 +281,15 @@ export function given<TGens extends Gen<unknown>[]>(
  * Try to find the smallest arguments for which the given (failed) property
  * still fails.
  *
+ * @typeParam TArgs - The parameter types of the property.
+ *
+ * @param prop - A failed property.
+ * @param args - Shrink trees of all the generated arguments for which the given
+ *   property failed.
+ * @param options - Provides a set of {@link ShrinkOptions} for the shrink
+ *   attempt. Generally, thse deal with limiting the number of shrinks to
+ *   attempt before giving up, since certain shrink trees may be infinite.
  * @nosideeffects
- * @param {(...args: TArgs) => unknown} prop A failed property.
- * @param {[Tree<TArgs[0], Tree<TArgs[1]>, ...]>} args
- *   Shrink trees of all the generated arguments for which the given property
- *   failed.
- * @param {Partial<ShrinkOptions>} [options]
- *   Provides a set of {@link ShrinkOptions} for the shrink attempt. Generally,
- *   thse deal with limiting the number of shrinks to attempt before giving up,
- *   since certain shrink trees may be infinite.
- * @returns {ShrinkResult<TArgs>}
- * @template TArgs The parameter types of the property.
  */
 export function shrink<TArgs extends unknown[]>(
     prop: (...args: TArgs) => unknown,
