@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@propcheck/jest",
+      "comment": "Improve in-code documentation and adopt TSDoc standard.",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@propcheck/jest"
+}
