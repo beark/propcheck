@@ -416,10 +416,12 @@ function getEnvSeed(): string | SeedState | undefined {
         const match = envSeed.match(regex)
 
         if (match) {
-            const a = Number.parseInt(match[1].trim(), 16)
-            const b = Number.parseInt(match[2].trim(), 16)
-            const c = Number.parseInt(match[3].trim(), 16)
-            const d = Number.parseInt(match[4].trim(), 16)
+            // Since the above regex will only match if we have four groups of
+            // hex numbers, these index operations should be infallible
+            const a = Number.parseInt(match[1]!.trim(), 16)
+            const b = Number.parseInt(match[2]!.trim(), 16)
+            const c = Number.parseInt(match[3]!.trim(), 16)
+            const d = Number.parseInt(match[4]!.trim(), 16)
 
             return [a, b, c, d]
         } else {

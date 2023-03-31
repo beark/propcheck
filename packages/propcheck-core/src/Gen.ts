@@ -61,14 +61,24 @@ export class Gen<T> {
      *
      * @param gens - Set of generators to sequence.
      *
+     * @throws `RangeError` if no generator is provided.
+     *
      * @nosideeffects
      */
     static sequence<T>(...gens: Gen<T>[]): Gen<T> {
+        if (gens.length === 0) {
+            throw new RangeError(
+                "@propcheck/core/Gen.sequence: at least one generator must be given",
+            )
+        }
+
         const run = (sz: number, sd: SeedState, i: number) => {
             if (i < gens.length) {
-                return gens[i].run(sz, sd, i)
+                // Always safe, because we just checked that i is < gens.length!
+                return gens[i]!.run(sz, sd, i)
             } else {
-                return gens[gens.length - 1].run(sz, sd, i)
+                // Always safe, because gens.length - 1 is always smaller than gens.length
+                return gens[gens.length - 1]!.run(sz, sd, i)
             }
         }
 

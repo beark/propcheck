@@ -480,7 +480,8 @@ function tryShrinkSingle<TArgs extends unknown[]>(
         .slice()
         .map(t => t.prune()) as ApplyTree<TArgs>
 
-    for (const c of argsTree[i].children) {
+    // i is always in range [0..argsTree.length)
+    for (const c of argsTree[i]!.children) {
         if (localShrinks >= maxShrinks) {
             break
         }

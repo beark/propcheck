@@ -23,7 +23,8 @@ export function elementOf_<T>(...options: T[]): Gen<T> {
         )
     }
 
-    return integral_(new Range(0, options.length - 1, 0)).map(i => options[i])
+    // Since options.length > 0 and we generate an integer in range [0..options.length-1), the indexing has to be safe.
+    return integral_(new Range(0, options.length - 1, 0)).map(i => options[i]!)
 }
 
 /**
@@ -45,7 +46,8 @@ export function elementOf<T>(...options: T[]): Gen<T> {
         )
     }
 
-    return integral(new Range(0, options.length - 1, 0)).map(i => options[i])
+    // Since options.length > 0 and we generate an integer in range [0..options.length-1), the indexing has to be safe.
+    return integral(new Range(0, options.length - 1, 0)).map(i => options[i]!)
 }
 
 type UnionOfGeneratedTypes<T extends Gen<unknown>[]> = TupleToUnion<{
@@ -74,7 +76,8 @@ export function oneOf_<T extends Gen<any>[]>(
         )
     }
 
-    return integral_(new Range(0, gens.length - 1, 0)).andThen(i => gens[i])
+    // Since gens.length > 0 and we generate an integer in range [0..gens.length-1), the indexing has to be safe.
+    return integral_(new Range(0, gens.length - 1, 0)).andThen(i => gens[i]!)
 }
 
 /**
@@ -100,7 +103,8 @@ export function oneOf<T extends Gen<any>[]>(
         )
     }
 
-    return integral(new Range(0, gens.length - 1, 0)).andThen(i => gens[i])
+    // Since gens.length > 0 and we generate an integer in range [0..gens.length-1), the indexing has to be safe.
+    return integral(new Range(0, gens.length - 1, 0)).andThen(i => gens[i]!)
 }
 
 /**
@@ -189,6 +193,11 @@ export function frequency<T>(...gens: WeightedGen<T>[]): Gen<T> {
 }
 
 const pick = <T>(n: number, xs: WeightedGen<T>[]): Gen<T> => {
-    const x = xs[0]
+    const [x] = xs
+    if (typeof x === "undefined") {
+        throw new Error(
+            "@propcheck/core/generators: impossible weight distribution encountered",
+        )
+    }
     return n <= x.weight ? x.gen : pick(n - x.weight, xs.slice(1))
 }

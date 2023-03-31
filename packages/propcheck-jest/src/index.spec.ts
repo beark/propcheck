@@ -328,7 +328,7 @@ describe("Expecting a property forall arguments", () => {
                         expect(prop).forall(Generators.nat),
                     ).toThrowError(e)
 
-                    lastSeedStr = seedStr
+                    lastSeedStr = seedStr!
                 }
 
                 delete process.env.PROPCHECK_STARTITER

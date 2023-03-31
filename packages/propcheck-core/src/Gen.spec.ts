@@ -58,6 +58,10 @@ describe("Gen", () => {
     })
 
     describe("sequence", () => {
+        it("should throw when given no generator", () => {
+            expect(Gen.sequence).toThrowError(RangeError)
+        })
+
         it("should run the generator associated with the given iteration", () => {
             const gen = Gen.sequence(Gen.const(0), Gen.const(5))
 
@@ -155,7 +159,7 @@ describe("Gen", () => {
         it("should add shrinks when there are none", () => {
             const gen = Gen.const(10).shrink(x => towardsIntegral(0, x))
 
-            const t = gen.run(0, seeds[0], 0)
+            const t = gen.run(0, seeds[0]!, 0)
 
             expect([...t]).toEqual([10, 0, 5, 8, 9])
         })
@@ -165,7 +169,7 @@ describe("Gen", () => {
                 .shrink(x => towardsIntegral(0, x))
                 .shrink(_ => Seq.singleton(100))
 
-            const t = gen.run(0, seeds[0], 0)
+            const t = gen.run(0, seeds[0]!, 0)
 
             expect([...t]).toEqual([10, 0, 5, 8, 9, 100])
         })
@@ -177,11 +181,11 @@ describe("Gen", () => {
                 towardsIntegral(0, x),
             )
 
-            const cs = gen.run(0, seeds[0], 0).children
+            const cs = gen.run(0, seeds[0]!, 0).children
 
             expect([...cs.map(t => t.value)]).toEqual([0, 5, 8, 9])
 
-            const c1 = cs.drop(2).collect()[0]
+            const c1 = cs.drop(2).collect()[0]!
             expect([...c1.children.map(t => t.value)]).toEqual([0, 4, 6, 7])
         })
 
@@ -190,7 +194,7 @@ describe("Gen", () => {
                 .shrink(x => towardsIntegral(0, x))
                 .shrinkRecursively(_ => [100])
 
-            const cs = gen.run(0, seeds[0], 0).children
+            const cs = gen.run(0, seeds[0]!, 0).children
             expect([...cs.map(t => t.value)]).toEqual([0, 5, 8, 9, 100])
         })
     })

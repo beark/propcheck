@@ -44,7 +44,7 @@ describe("Prng", () => {
                 [0, 100],
                 [0.5, 0.75],
                 [40.5, 1234.5],
-            ]
+            ] as const
             bounds.forEach(([minBound, maxBound]) => {
                 seeds.forEach(s => {
                     const n = Prng.nextNum(s, { minBound, maxBound })

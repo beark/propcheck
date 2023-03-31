@@ -29,26 +29,37 @@ import type Gen from "../Gen"
  * @param domainSize - The number of possible unique input combinations. A new
  *   result value is generated for every new input combination until this amount
  *   has been generated, whereafter the return values loop around.
+ * @throws `RangeError` if `domainSize` is not a non-zero, positive integer.
+ *
  * @nosideeffects
  */
 export const fn = <TReturn>(
     retGen: Gen<TReturn>,
     domainSize: number = 50,
 ): Gen<(...args: unknown[]) => TReturn> => {
+    if (!Number.isInteger(domainSize) || domainSize <= 0) {
+        throw new RangeError(
+            "@propcheck/core/generators: fn requires that domainSize is a non-zero, positive integer",
+        )
+    }
+
     const m = new Map<string, TReturn>()
     let i = 0
     return retGen.repeat(domainSize).map(rets => (...args) => {
         const key = JSON.stringify(args)
         if (m.has(key)) {
+            // Safe, because we just checked above
             return m.get(key)!
         } else {
             const used = i
-            m.set(key, rets[used])
+            // Safe, because i is always in range [0..domainSize)
+            m.set(key, rets[used]!)
             if (++i === domainSize) {
                 i = 0
             }
 
-            return rets[used]
+            // Safe, because i is always in range [0..domainSize)
+            return rets[used]!
         }
     })
 }

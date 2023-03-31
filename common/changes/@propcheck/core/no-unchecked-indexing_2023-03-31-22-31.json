@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@propcheck/core",
+      "comment": "Add `noUncheckedIndexedAccess` to compiler options.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@propcheck/core"
+}
