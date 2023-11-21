@@ -194,6 +194,9 @@ export function frequency<T>(...gens: WeightedGen<T>[]): Gen<T> {
 
 const pick = <T>(n: number, xs: WeightedGen<T>[]): Gen<T> => {
     const [x] = xs
+    // We cannot get here via any exported function, so it is useless to require
+    // coverage
+    /* istanbul ignore next */
     if (typeof x === "undefined") {
         throw new Error(
             "@propcheck/core/generators: impossible weight distribution encountered",
