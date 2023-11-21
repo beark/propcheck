@@ -11,7 +11,7 @@
         "index.d.ts"
     ],
     "engines": {
-        "node": ">=12.17.0 <20"
+        "node": ">=16.14.0 <22"
     },
     "keywords": [
         "functional",
@@ -37,7 +37,7 @@
         "build": "tsc -p tsconfig.build.json",
         "clean": "git clean -fx -- *.js *.d.ts *.d.ts.map *.log && rm -rf coverage/",
         "lint": "eslint \"./src/**/*\"",
-        "test": "node ../../common/scripts/runForNodeGeq 14.0.0 jest"
+        "test": "jest"
     },
     "jest": {
         "preset": "ts-jest",
@@ -70,8 +70,8 @@
         "tslib": "^2.5.0"
     },
     "peerDependencies": {
-        "@types/jest": ">= 24.0.20 < 30",
-        "jest": ">= 24.1.0 < 30"
+        "@types/jest": ">= 26.4.0 < 30",
+        "jest": ">= 27.5.0 < 30"
     },
     "devDependencies": {
         "@types/jest": "29.5.1",

@@ -16,7 +16,7 @@
      * path segment in the "$schema" field for all your Rush config files.  This will ensure
      * correct error-underlining and tab-completion for editors such as VS Code.
      */
-    "rushVersion": "5.82.1",
+    "rushVersion": "5.110.2",
 
     /**
      * The next field selects which package manager should be installed and determines its version.
@@ -26,7 +26,7 @@
      * Specify one of: "pnpmVersion", "npmVersion", or "yarnVersion".  See the Rush documentation
      * for details about these alternatives.
      */
-    "pnpmVersion": "6.35.0",
+    "pnpmVersion": "8.10.5",
 
     // "npmVersion": "4.5.0",
     // "yarnVersion": "1.9.4",
@@ -86,7 +86,7 @@
      * Specify a SemVer range to ensure developers use a Node.js version that is appropriate
      * for your repo.
      */
-    "nodeSupportedVersionRange": ">=12.7.0 <20",
+    "nodeSupportedVersionRange": ">=16.6.0 <22",
 
     /**
      * Odd-numbered major versions of Node.js are experimental.  Even-numbered releases
@@ -325,21 +325,6 @@
             "packageName": "@propcheck/jest",
             "projectFolder": "packages/propcheck-jest",
             "shouldPublish": true
-        },
-        {
-            "packageName": "compat-jest24",
-            "projectFolder": "tests/compat-jest24",
-            "shouldPublish": false
-        },
-        {
-            "packageName": "compat-jest25",
-            "projectFolder": "tests/compat-jest25",
-            "shouldPublish": false
-        },
-        {
-            "packageName": "compat-jest26",
-            "projectFolder": "tests/compat-jest26",
-            "shouldPublish": false
         },
         {
             "packageName": "compat-jest27",

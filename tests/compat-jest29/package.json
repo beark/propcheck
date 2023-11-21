@@ -8,7 +8,7 @@
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "lint": "echo 'nothing to do'",
-        "test": "node ../../common/scripts/runForNodeGeq.js 14.0.0 jest"
+        "test": "jest"
     },
     "jest": {
         "preset": "ts-jest",

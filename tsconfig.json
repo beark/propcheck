@@ -1,32 +1,32 @@
 {
-  "compilerOptions": {
-    /* Basic Options */
-    "target": "es2016" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */,
-    "module": "commonjs" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
-    "lib": [
-      "ES2016"
-    ] /* Specify library files to be included in the compilation. */,
-    "allowJs": false /* Allow javascript files to be compiled. */,
-    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
-    "declaration": true /* Generates corresponding '.d.ts' file. */,
-    "declarationMap": true /* Generates corresponding .d.ts.map file */,
-    "newLine": "lf" /* Specify end of line character to be emitted. */,
-    "stripInternal": true /* Strip declarations marked @internal */,
-    "importHelpers": true /* Import emit helpers from tslib */,
+    "compilerOptions": {
+        /* Basic Options */
+        "target": "es2018" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */,
+        "module": "commonjs" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
+        "lib": [
+            "ES2018"
+        ] /* Specify library files to be included in the compilation. */,
+        "allowJs": false /* Allow javascript files to be compiled. */,
+        "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
+        "declaration": true /* Generates corresponding '.d.ts' file. */,
+        "declarationMap": true /* Generates corresponding .d.ts.map file */,
+        "newLine": "lf" /* Specify end of line character to be emitted. */,
+        "stripInternal": true /* Strip declarations marked @internal */,
+        "importHelpers": true /* Import emit helpers from tslib */,
 
-    /* Strict Type-Checking Options */
-    "strict": true /* Enable all strict type-checking options. */,
+        /* Strict Type-Checking Options */
+        "strict": true /* Enable all strict type-checking options. */,
 
-    /* Additional Checks */
-    "noUnusedLocals": true /* Report errors on unused locals. */,
-    "noUnusedParameters": true /* Report errors on unused parameters. */,
-    "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
+        /* Additional Checks */
+        "noUnusedLocals": true /* Report errors on unused locals. */,
+        "noUnusedParameters": true /* Report errors on unused parameters. */,
+        "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
 
-    /* Set up paths for all the sub-packages */
-    "baseUrl": "./",
-    "paths": {
-      "@propcheck/core": ["packages/propcheck-core"],
-      "@propcheck/core/*": ["packages/propcheck-core/*"]
+        /* Set up paths for all the sub-packages */
+        "baseUrl": "./",
+        "paths": {
+            "@propcheck/core": ["packages/propcheck-core"],
+            "@propcheck/core/*": ["packages/propcheck-core/*"]
+        }
     }
-  }
 }
