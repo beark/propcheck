@@ -1,0 +1,10 @@
+{
+    "changes": [
+        {
+            "packageName": "@propcheck/core",
+            "comment": "Fix an accidental mutation of `args` array in Runner module's `shrink`",
+            "type": "patch"
+        }
+    ],
+    "packageName": "@propcheck/core"
+}

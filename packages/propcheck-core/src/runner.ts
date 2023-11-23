@@ -314,7 +314,6 @@ export function shrink<TArgs extends unknown[]>(
         shrinks += singleResult.shrinks
         if (singleResult.smallestFailingArgs !== undefined) {
             smallestFailingArgs[i] = singleResult.smallestFailingArgs[i]
-            args[i] = Tree.singleton(smallestFailingArgs[i])
         }
 
         if (shrinks >= maxShrinks) {
