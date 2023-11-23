@@ -1,0 +1,10 @@
+{
+    "changes": [
+        {
+            "packageName": "@propcheck/jest",
+            "comment": "When a property fails, include not just the smallest failing argument(s) in the message, but also the first one(s) found.",
+            "type": "patch"
+        }
+    ],
+    "packageName": "@propcheck/jest"
+}

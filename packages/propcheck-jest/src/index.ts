@@ -1,8 +1,8 @@
-import Gen, { GeneratedType } from "@propcheck/core/Gen"
+import Gen, { type GeneratedType } from "@propcheck/core/Gen"
 import {
     given as givenCore,
-    PropCheckFailure,
-    PropCheckOpts,
+    type PropCheckFailure,
+    type PropCheckOpts,
     shrink,
 } from "@propcheck/core/runner"
 
@@ -387,7 +387,13 @@ function generateMessage<TParams extends unknown[]>(
         "iteration",
         result.iteration,
     )}.`
-    const printedArgs = `\n\tSmallest failing ${ss(
+    const origArgs = `\n\tFirst failing ${ss(
+        "argument",
+        result.args.length,
+    )}: ${result.args
+        .map(arg => utils.utils.printReceived(arg.value))
+        .join(", ")}`
+    const smallestArgs = `\n\tSmallest failing ${ss(
         "argument",
         result.args.length,
     )}: ${args.map(arg => utils.utils.printReceived(arg)).join(", ")}`
@@ -401,7 +407,7 @@ function generateMessage<TParams extends unknown[]>(
         result.size
     }`
 
-    return headline + printedArgs + error + meta
+    return headline + origArgs + smallestArgs + error + meta
 }
 
 function ss(word: string, count: number): string {

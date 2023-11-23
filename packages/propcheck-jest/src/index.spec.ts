@@ -1,7 +1,8 @@
-import { Gen, Generators } from "@propcheck/core"
+import { Gen, Generators, Range } from "@propcheck/core"
 import { makeSeedState } from "@propcheck/core/prng"
 import * as R from "@propcheck/core/runner"
 import { given } from "."
+import { integral } from "@propcheck/core/generators"
 
 /* eslint @typescript-eslint/no-explicit-any: 0 */
 
@@ -81,6 +82,15 @@ describe("Expecting a property forall arguments", () => {
 
         expect(() => expect(prop).forall()).toThrowError(/string failure/)
         spy.mockRestore()
+    })
+
+    it("should include both the original failing argument(s) and the smallest ones(s)", () => {
+        const prop = (_: number) => false
+        expect(() =>
+            expect(prop).forall(integral(new Range(1, 1, 0))),
+        ).toThrowError(
+            /First failing argument.*1.*Smallest failing argument.*0.*Seed/s,
+        )
     })
 
     it("should use any configured seed", () => {
